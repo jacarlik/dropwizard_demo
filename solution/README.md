@@ -1,7 +1,13 @@
-README
-====
-How to run the your solution...
+# Expenses
 
-IMPORTANT
-====
-To avoid unconcious bias, we aim to have your submission reviewed anonymously by one of our engineering team. Please try and avoid adding personal details to this document such as your name, or using pronouns that might indicate your gender.
+How to start the Expenses application
+---
+
+1. Run `mvn clean install` to build your application
+1. Start application with `java -jar target/expenses-1.0-SNAPSHOT.jar server config.yml`
+1. To check that your application is running enter url `http://localhost:8080`
+
+Health Check
+---
+
+To see your applications health enter url `http://localhost:8081/healthcheck`
