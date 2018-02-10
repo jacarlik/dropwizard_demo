@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
-@JsonPropertyOrder({ "id", "date", "amount", "vat", "reason" })
 public class Expense
 {
     @JsonProperty("id") private int m_id;
@@ -29,6 +28,15 @@ public class Expense
     {
         m_date = date;
         m_amount = amount;
+        m_reason = reason;
+        m_country = country;
+    }
+
+    public Expense(LocalDate date, BigDecimal amount, BigDecimal vat, String reason, String country)
+    {
+        m_date = date;
+        m_amount = amount;
+        m_vat = vat;
         m_reason = reason;
         m_country = country;
     }

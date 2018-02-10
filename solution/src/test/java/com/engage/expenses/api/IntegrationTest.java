@@ -2,9 +2,9 @@ package com.engage.expenses.api;
 
 import com.engage.expenses.ExpensesApplication;
 import com.engage.expenses.ExpensesConfiguration;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.dropwizard.client.JerseyClientBuilder;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.testing.ResourceHelpers;
@@ -17,8 +17,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,11 +32,11 @@ public class IntegrationTest
     @Test
     public void testExpenses()
     {
-        Client client = new JerseyClientBuilder(RULE.getEnvironment()).build("Test client");
-
         ObjectMapper MAPPER = Jackson.newObjectMapper();
-        MAPPER.registerModule(new JavaTimeModule());
         MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        MAPPER.configure(MapperFeature.USE_ANNOTATIONS, false);
+
+        Client client = new JerseyClientBuilder(RULE.getEnvironment()).using(MAPPER).build("Test client");
 
         Response saveExpenseResponse = client.target(
             String.format("http://localhost:%d/api/expenses", RULE.getLocalPort()))

@@ -5,7 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Entities.EscapeMode;
 import org.jsoup.safety.Whitelist;
 
-public class XSSUtils
+public class CommonUtils
 {
     /**
      * Strips any potential XSS threats out of the value

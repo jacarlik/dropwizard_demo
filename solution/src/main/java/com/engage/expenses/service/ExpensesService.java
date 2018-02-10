@@ -2,15 +2,13 @@ package com.engage.expenses.service;
 
 import com.engage.expenses.api.Expense;
 import com.engage.expenses.db.ExpenseDao;
-import com.engage.expenses.util.XSSUtils;
+import com.engage.expenses.util.CommonUtils;
 import org.skife.jdbi.v2.exceptions.UnableToExecuteStatementException;
 import org.skife.jdbi.v2.exceptions.UnableToObtainConnectionException;
 import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 import java.util.List;
 
 public abstract class ExpensesService
@@ -32,9 +30,9 @@ public abstract class ExpensesService
 
     public int saveExpense(Expense expense)
     {
-        // Script potential XSS from the "reason" field; alternative would return non-200 response to the client, indicating a bad input
+        // Strip potential XSS from the "reason" field; an alternative would be return non-200 response to the client, indicating a bad input
         return expenseDao().saveExpense(
-            new Expense(expense.getDate(), expense.getAmount(), XSSUtils.stripXSS(expense.getReason()), expense.getCountry())
+            new Expense(expense.getDate(), expense.getAmount(), CommonUtils.stripXSS(expense.getReason()), expense.getCountry())
         );
     }
 
