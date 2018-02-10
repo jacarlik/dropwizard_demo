@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.*;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.dropwizard.jackson.Jackson;
 import org.hamcrest.MatcherAssert;
 import org.junit.Test;
@@ -17,8 +16,8 @@ import java.time.LocalDate;
 public class ExpenseTest
 {
     private static final ObjectMapper MAPPER = Jackson.newObjectMapper();
-    private static final Expense EXPENSE = new Expense(
-        LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), new BigDecimal("1.7"), "Test", "GBR"
+    private static final ExpenseRecord EXPENSE = new ExpenseRecord(
+        LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), "Test", "GBR"
     );
 
     static
@@ -41,7 +40,7 @@ public class ExpenseTest
     public void deserializesFromJSON() throws Exception {
         MatcherAssert.assertThat(
             "Expense can be deserialized from JSON",
-            MAPPER.readValue(fixture("fixtures/expense.json"), Expense.class),
+            MAPPER.readValue(fixture("fixtures/expense.json"), ExpenseRecord.class),
             is(EXPENSE)
         );
     }

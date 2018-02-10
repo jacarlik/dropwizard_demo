@@ -1,4 +1,4 @@
-package com.engage.expenses.resources;
+package com.engage.expenses.health;
 
 import com.codahale.metrics.health.HealthCheck;
 import com.engage.expenses.service.ExpensesService;
@@ -25,7 +25,7 @@ public class ExpenseResourceHealthCheck extends HealthCheck
             return Result.healthy(HEALTHY_MESSAGE);
         }
         else
-            {
+        {
             return Result.unhealthy(UNHEALTHY_MESSAGE , healthStatus);
         }
     }

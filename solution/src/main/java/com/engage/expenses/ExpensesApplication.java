@@ -1,6 +1,6 @@
 package com.engage.expenses;
 
-import com.engage.expenses.resources.ExpenseResourceHealthCheck;
+import com.engage.expenses.health.ExpenseResourceHealthCheck;
 import com.engage.expenses.resources.ExpenseResource;
 import com.engage.expenses.service.ExpensesService;
 import io.dropwizard.Application;
@@ -18,7 +18,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 /**
- * Main class for the expenses application
+ * Expenses application entry-point class
  *
  * @author jklarica
  * @since 2018-02-09

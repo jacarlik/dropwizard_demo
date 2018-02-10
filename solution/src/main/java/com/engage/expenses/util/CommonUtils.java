@@ -5,6 +5,12 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Entities.EscapeMode;
 import org.jsoup.safety.Whitelist;
 
+/**
+ * General utils class
+ *
+ * @author jklarica
+ * @since 2018-02-10
+ */
 public class CommonUtils
 {
     /**

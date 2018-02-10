@@ -1,18 +1,16 @@
 package com.engage.expenses.resources;
 
-import com.engage.expenses.api.Expense;
-import com.engage.expenses.db.ExpenseDao;
+import com.engage.expenses.api.ExpenseRecord;
+import com.engage.expenses.api.ExpenseRecordTax;
 import com.engage.expenses.service.ExpensesService;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.common.collect.ImmutableList;
 import io.dropwizard.jackson.Jackson;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Test;
 
@@ -33,13 +31,13 @@ import static org.mockito.Mockito.verify;
 public class ExpenseResourceTest
 {
     private static final ExpensesService EXPENSES_SERVICE = mock(ExpensesService.class);
-    private final Expense EXPENSE = new Expense(LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), "Test", "GBR");
+    private final ExpenseRecord EXPENSE_RECORD = new ExpenseRecord(LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), "Test", "GBR");
+    private final ExpenseRecordTax EXPENSE_RECORD_TAX = new ExpenseRecordTax(0, LocalDate.parse("2018-02-10"), new BigDecimal("1.7"), "Test");
     private static final ObjectMapper MAPPER = Jackson.newObjectMapper();
 
     static
     {
         MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        MAPPER.configure(MapperFeature.USE_ANNOTATIONS, false);
     }
 
     @ClassRule
@@ -51,8 +49,8 @@ public class ExpenseResourceTest
     @Before
     public void setup()
     {
-        when(EXPENSES_SERVICE.getExpenses()).thenReturn(ImmutableList.of(EXPENSE));
-        when(EXPENSES_SERVICE.saveExpense(EXPENSE)).thenReturn(0);
+        when(EXPENSES_SERVICE.getExpenses()).thenReturn(ImmutableList.of(EXPENSE_RECORD_TAX));
+        when(EXPENSES_SERVICE.saveExpense(EXPENSE_RECORD)).thenReturn(0);
     }
 
     @After
@@ -64,15 +62,15 @@ public class ExpenseResourceTest
     @Test
     public void testGetExpenses()
     {
-        List<Expense> expenses = Arrays.asList(RESOURCES.target("/expenses").request().get().readEntity(Expense[].class));
-        assertThat(expenses.get(0)).isEqualTo(EXPENSE);
+        List<ExpenseRecordTax> expenses = Arrays.asList(RESOURCES.target("/expenses").request().get().readEntity(ExpenseRecordTax[].class));
+        assertThat(expenses.get(0)).isEqualTo(EXPENSE_RECORD_TAX);
         verify(EXPENSES_SERVICE).getExpenses();
     }
 
     @Test
     public void testSaveExpense()
     {
-        assertThat(RESOURCES.target("/expenses").request().post(Entity.entity(EXPENSE, MediaType.APPLICATION_JSON)).readEntity(Integer.class)).isEqualTo(0);
-        verify(EXPENSES_SERVICE).saveExpense(EXPENSE);
+        assertThat(RESOURCES.target("/expenses").request().post(Entity.entity(EXPENSE_RECORD, MediaType.APPLICATION_JSON)).readEntity(Integer.class)).isEqualTo(0);
+        verify(EXPENSES_SERVICE).saveExpense(EXPENSE_RECORD);
     }
 }

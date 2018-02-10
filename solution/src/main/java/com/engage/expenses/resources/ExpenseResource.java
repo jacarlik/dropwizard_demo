@@ -1,10 +1,8 @@
 package com.engage.expenses.resources;
 
 import com.codahale.metrics.annotation.Timed;
-import com.engage.expenses.ExpensesConfiguration;
-import com.engage.expenses.api.Expense;
+import com.engage.expenses.api.ExpenseRecord;
 import com.engage.expenses.service.ExpensesService;
-import com.google.common.annotations.VisibleForTesting;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -52,7 +50,7 @@ public class ExpenseResource
      */
     @POST
     @Timed
-    public Response saveExpense(@NotNull @Valid final Expense expense)
+    public Response saveExpense(@NotNull @Valid ExpenseRecord expense)
     {
         return Response.ok(m_expensesService.saveExpense(expense)).build();
     }

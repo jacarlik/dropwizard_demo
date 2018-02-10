@@ -8,7 +8,7 @@ CREATE TABLE t_standard_vat_rate (
   rate NUMERIC NOT NULL
 );
 
-COMMENT ON TABLE t_standard_vat_rate IS 'Contains standard VAT rates for each country';
+COMMENT ON TABLE t_standard_vat_rate IS 'Contains standard VAT rates';
 COMMENT ON COLUMN t_standard_vat_rate.id IS 'VAT country/rate identifier';
 COMMENT ON COLUMN t_standard_vat_rate.country IS 'ISO Alpha-3 country code';
 COMMENT ON COLUMN t_standard_vat_rate.rate IS 'Standard VAT rate';

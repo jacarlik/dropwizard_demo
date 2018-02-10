@@ -2,7 +2,6 @@ package com.engage.expenses.api;
 
 import com.engage.expenses.ExpensesApplication;
 import com.engage.expenses.ExpensesConfiguration;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import io.dropwizard.client.JerseyClientBuilder;
@@ -27,14 +26,13 @@ public class IntegrationTest
 {
     @ClassRule
     public static final DropwizardAppRule<ExpensesConfiguration> RULE =
-        new DropwizardAppRule<>(ExpensesApplication.class, ResourceHelpers.resourceFilePath("test.yml"));
+        new DropwizardAppRule<>(ExpensesApplication.class, ResourceHelpers.resourceFilePath("profiles/test.yml"));
 
     @Test
     public void testExpenses()
     {
         ObjectMapper MAPPER = Jackson.newObjectMapper();
         MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        MAPPER.configure(MapperFeature.USE_ANNOTATIONS, false);
 
         Client client = new JerseyClientBuilder(RULE.getEnvironment()).using(MAPPER).build("Test client");
 
@@ -51,9 +49,9 @@ public class IntegrationTest
             .request()
             .get();
 
-        List<Expense> expenses = Arrays.asList(getExpensesResponse.readEntity(Expense[].class));
+        List<ExpenseRecordTax> expenses = Arrays.asList(getExpensesResponse.readEntity(ExpenseRecordTax[].class));
 
         assertThat(getExpensesResponse.getStatus()).isEqualTo(HttpStatus.SC_OK);
-        assertThat(expenses.stream().map(Expense::getId).collect(Collectors.toList())).contains(id);
+        assertThat(expenses.stream().map(ExpenseRecordTax::getId).collect(Collectors.toList())).contains(id);
     }
 }
