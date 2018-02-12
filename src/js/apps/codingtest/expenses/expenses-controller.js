@@ -16,7 +16,7 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 	// Update the tab sections
 	$rootScope.selectTabSection("expenses", 0);
 
-    const amountPattern = /^(\d+(\.\d{1,2})?)\s?(EUR)$/i;
+    const amountPattern = /^(\d+(\.\d+)?)\s?(EUR)$/i;
     var restExpenses = $restalchemy.init({ root: $config.apiroot }).at("expenses");
     var forexApi = $restalchemy.init({ root: $config.forexApi }).at("latest");
 
@@ -82,14 +82,20 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 
     $scope.saveExpense = function () {
         if ($scope.expensesform.$valid) {
-			var match = $scope.newExpense.amount.match(amountPattern);
+        	var request = {
+                amount: $scope.newExpense.amount,
+				country: $scope.newExpense.country,
+				date: $scope.newExpense.date,
+				reason: $scope.newExpense.reason
+			};
+			var match = request.amount.match(amountPattern);
             // Amount was specified in EURs, proceed with conversion
             if (match != null) {
                 forexApi.get({base: "EUR", symbols: "GBP"})
                     .then(function(response) {
-                        $scope.newExpense.amount = parseFloat(match[1] * response.rates.GBP).toFixed(2);
+                        request.amount = parseFloat(match[1] * response.rates.GBP).toFixed(2);
                         // Post the new expense
-                        restExpenses.post($scope.newExpense)
+                        restExpenses.post(request)
                             .then(function () {
                                 loadExpenses();
                             })
@@ -98,7 +104,7 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
                     .error(handleGetCurrencyRateError.bind(this))
 			} else {
                 // Post the new expense
-                restExpenses.post($scope.newExpense)
+                restExpenses.post(request)
 					.then(function () {
                     	loadExpenses();
                 	})
