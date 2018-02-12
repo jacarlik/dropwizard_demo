@@ -5,7 +5,8 @@ This application was developed and tested on OSX Sierra and CentOS 7.4.1708.
 
 ### Prerequisites
 1. [Node package manager](https://docs.npmjs.com/getting-started/installing-node)
-1. [Docker](https://docs.docker.com/install/)
+2. [Docker](https://docs.docker.com/install/)
+3. [Maven 3.x](https://maven.apache.org/install.html)
 
 ### Setting up the development database
 
@@ -14,7 +15,7 @@ This application was developed and tested on OSX Sierra and CentOS 7.4.1708.
  
 ### Backend
 
-1. Go to a directory of your choice and execute `git clone https://github.com/jklarica/dropwizard_demo.git && cd dropwizard_demo/solution`.
+1. Go to the directory of your choice and execute `git clone https://github.com/jklarica/dropwizard_demo.git && cd dropwizard_demo/solution`.
 2. If you're using docker-machine (mentioned in the step 2),  you need to update the `uri` property with the correct IP address (instead of `localhost`) in `src/test/resources/profiles/test.yml` and `src/main/resources/profiles/mainline.yml`.
 3. Run `mvn clean package -U` to build the application
 4. Start the application with `java -jar target/expenses-1.0-SNAPSHOT.jar server src/main/resources/profiles/mainline.yml`
