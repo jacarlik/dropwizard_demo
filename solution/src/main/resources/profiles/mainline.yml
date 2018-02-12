@@ -27,4 +27,9 @@ database:
   evictionInterval: 10s
   minIdleTime: 1 minute
 
+# Date format used by both API and the frontend
 dateFormat: dd/MM/yy
+
+# Credentials for basic authentication (ideally, this should live within a DB)
+username: admin
+password: admin

@@ -1,4 +1,4 @@
-package com.engage.expenses.service;
+package com.engage.expenses.core;
 
 import com.engage.expenses.api.ExpenseRecord;
 import com.engage.expenses.api.ExpenseRecordTax;

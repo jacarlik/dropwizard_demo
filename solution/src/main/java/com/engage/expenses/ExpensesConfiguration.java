@@ -25,6 +25,24 @@ public class ExpensesConfiguration extends Configuration
     @NotBlank
     private String m_dateFormat;
 
+    @JsonProperty("username")
+    @NotBlank
+    private String m_userName;
+
+    @JsonProperty("password")
+    @NotBlank
+    private String m_password;
+
+    public DataSourceFactory getDataSourceFactory()
+    {
+        return m_database;
+    }
+
+    public void setDataSourceFactory(DataSourceFactory factory)
+    {
+        m_database = factory;
+    }
+
     public String getDateFormat()
     {
         return m_dateFormat;
@@ -35,12 +53,23 @@ public class ExpensesConfiguration extends Configuration
         this.m_dateFormat = dateFormat;
     }
 
-    public void setDataSourceFactory(DataSourceFactory factory) {
-        m_database = factory;
+    public String getUserName()
+    {
+        return m_userName;
     }
 
-    public DataSourceFactory getDataSourceFactory()
+    public void setUserName(String userName)
     {
-        return m_database;
+        m_userName = userName;
+    }
+
+    public String getPassword()
+    {
+        return m_password;
+    }
+
+    public void setPassword(String password)
+    {
+        m_password = password;
     }
 }

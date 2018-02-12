@@ -1,18 +1,25 @@
 package com.engage.expenses;
 
+import com.engage.expenses.core.auth.BasicAuthenticator;
+import com.engage.expenses.core.auth.BasicAuthorizer;
+import com.engage.expenses.core.auth.User;
 import com.engage.expenses.health.ExpenseResourceHealthCheck;
 import com.engage.expenses.resources.ExpenseResource;
-import com.engage.expenses.service.ExpensesService;
+import com.engage.expenses.core.ExpensesService;
 import com.engage.expenses.util.LocalDateDeserializer;
 import com.engage.expenses.util.LocalDateSerializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.flyway.FlywayBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.flywaydb.core.Flyway;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +81,7 @@ public class ExpensesApplication extends Application<ExpensesConfiguration>
         // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
-        // DO not pass a preflight request to down-stream auth filters unauthenticated preflight requests should be permitted by spec
+        // Do not pass a preflight request to down-stream auth filters; unauthenticated preflight requests should be permitted by spec
         cors.setInitParameter(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM, Boolean.FALSE.toString());
 
         // Set up date format for (de)serialization
@@ -86,6 +93,15 @@ public class ExpensesApplication extends Application<ExpensesConfiguration>
         // Retrieve datasource from the configuration file
         DataSource dataSource = configuration.getDataSourceFactory().build(environment.metrics(), DATABASE);
         DBI dbi = new DBI(dataSource);
+
+        // Setting up security
+        environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
+                                                       .setAuthenticator(new BasicAuthenticator(configuration.getUserName(), configuration.getPassword()))
+                                                       .setAuthorizer(new BasicAuthorizer())
+                                                       .setRealm("BASIC-AUTH-REALM")
+                                                       .buildAuthFilter()));
+        environment.jersey().register(RolesAllowedDynamicFeature.class);
+        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
 
         // Initiate flyway migrations
         LOGGER.info("Initiating flyway migrations...");

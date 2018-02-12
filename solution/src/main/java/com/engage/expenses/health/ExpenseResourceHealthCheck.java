@@ -1,7 +1,7 @@
 package com.engage.expenses.health;
 
 import com.codahale.metrics.health.HealthCheck;
-import com.engage.expenses.service.ExpensesService;
+import com.engage.expenses.core.ExpensesService;
 
 /**
  * Health checks for the expenses application

@@ -2,11 +2,20 @@ package com.engage.expenses.resources;
 
 import com.engage.expenses.api.ExpenseRecord;
 import com.engage.expenses.api.ExpenseRecordTax;
-import com.engage.expenses.service.ExpensesService;
+import com.engage.expenses.core.ExpensesService;
+import com.engage.expenses.core.auth.BasicAuthenticator;
+import com.engage.expenses.core.auth.BasicAuthorizer;
+import com.engage.expenses.core.auth.User;
 import com.engage.expenses.util.CommonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.auth.basic.BasicCredentialAuthFilter;
 import io.dropwizard.testing.junit.ResourceTestRule;
+import org.apache.http.HttpHeaders;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,9 +46,20 @@ public class ExpenseResourceTest
     private final ExpenseRecord EXPENSE_RECORD = new ExpenseRecord(LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), "Test");
     private final ExpenseRecordTax EXPENSE_RECORD_TAX = new ExpenseRecordTax(LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), new BigDecimal("1.7"), "Test");
     private static final ObjectMapper MAPPER = CommonUtils.getObjectMapper();
+    private static final String USERNAME = "admin";
+    private static final String PASSWORD = "admin";
+    private static final String BASIC_AUTH_HEADER = "Basic YWRtaW46YWRtaW4=";
 
     @ClassRule
     public static ResourceTestRule RESOURCES = ResourceTestRule.builder()
+        .setTestContainerFactory(new GrizzlyWebTestContainerFactory())
+        .addProvider(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
+                                                .setAuthenticator(new BasicAuthenticator(USERNAME, PASSWORD))
+                                                .setAuthorizer(new BasicAuthorizer())
+                                                .setRealm("BASIC-AUTH-REALM")
+                                                .buildAuthFilter()))
+        .addProvider(RolesAllowedDynamicFeature.class)
+        .addProvider(new AuthValueFactoryProvider.Binder<>(User.class))
         .addResource(new ExpenseResource(EXPENSES_SERVICE))
         .setMapper(MAPPER)
         .build();
@@ -65,6 +85,7 @@ public class ExpenseResourceTest
         List<ExpenseRecordTax> expenses = Arrays.asList(
             RESOURCES.target("/expenses")
                 .request()
+                .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
                 .get()
                 .readEntity(ExpenseRecordTax[].class)
         );
@@ -78,6 +99,7 @@ public class ExpenseResourceTest
         ExpenseRecordTax expense = RESOURCES.target("/expenses")
             .path(String.valueOf(1))
             .request()
+            .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
             .get()
             .readEntity(ExpenseRecordTax.class);
         Assert.assertEquals("Requested expense record corresponds to the retrieved one", EXPENSE_RECORD_TAX, expense);
@@ -92,6 +114,7 @@ public class ExpenseResourceTest
             new Integer(0),
             RESOURCES.target("/expenses")
                 .request()
+                .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
                 .post(Entity.entity(EXPENSE_RECORD, MediaType.APPLICATION_JSON))
                 .readEntity(Integer.class)
         );
@@ -108,6 +131,7 @@ public class ExpenseResourceTest
             RESOURCES.target("/expenses")
                 .path(String.valueOf(1))
                 .request()
+                .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
                 .delete()
                 .readEntity(Integer.class)
         );

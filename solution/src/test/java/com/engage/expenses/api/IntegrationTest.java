@@ -8,8 +8,8 @@ import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
 import io.dropwizard.client.JerseyClientBuilder;
-import io.dropwizard.testing.ResourceHelpers;
 import io.dropwizard.testing.junit.DropwizardAppRule;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -34,11 +34,12 @@ public class IntegrationTest
 {
     @ClassRule
     public static final DropwizardAppRule<ExpensesConfiguration> RULE = new DropwizardAppRule<>(
-        ExpensesApplication.class, ResourceHelpers.resourceFilePath("profiles/test.yml")
+        ExpensesApplication.class, "src/main/resources/profiles/mainline.yml"
     );
     private static ObjectMapper MAPPER = CommonUtils.getObjectMapper();
     private static Client CLIENT;
     private static String RESOURCE_URI;
+    private static final String BASIC_AUTH_HEADER = "Basic YWRtaW46YWRtaW4=";
 
     @BeforeClass
     public static void setUp()
@@ -156,6 +157,7 @@ public class IntegrationTest
     {
         return CLIENT.target(RESOURCE_URI)
             .request()
+            .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
             .post(Entity.json(jsonString));
     }
 
@@ -163,6 +165,7 @@ public class IntegrationTest
     {
         return CLIENT.target(RESOURCE_URI)
             .request()
+            .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
             .get();
     }
 
@@ -171,6 +174,7 @@ public class IntegrationTest
         return CLIENT.target(RESOURCE_URI)
             .path(String.valueOf(id))
             .request()
+            .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
             .get();
     }
 
@@ -179,6 +183,7 @@ public class IntegrationTest
         return CLIENT.target(RESOURCE_URI)
             .path(String.valueOf(id))
             .request()
+            .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
             .delete();
     }
 }

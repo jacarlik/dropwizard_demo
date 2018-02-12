@@ -16,7 +16,7 @@ This application was developed and tested on OSX Sierra and CentOS 7.4.1708.
 ### Backend
 
 1. Go to the directory of your choice and execute `git clone https://github.com/jklarica/dropwizard_demo.git && cd dropwizard_demo/solution`.
-2. If you're using docker-machine (mentioned in the step 2),  you need to update the `uri` property with the correct IP address (instead of `localhost`) in `src/test/resources/profiles/test.yml` and `src/main/resources/profiles/mainline.yml`.
+2. If you're using docker-machine (mentioned in the step 2),  you need to update the `uri` property with the correct IP address (instead of `localhost`) in `src/main/resources/profiles/mainline.yml`.
 3. Run `mvn clean package -U` to build the application
 4. Start the application with `java -jar target/expenses-1.0-SNAPSHOT.jar server src/main/resources/profiles/mainline.yml`
 5. To check that the application is running enter URL `curl 'http://localhost:10001/healthcheck'`
@@ -38,7 +38,7 @@ The following cURL commands can be used to interact with the endpoint:
   
 #### Get all expenses
 
-    curl 'http://localhost:10000/app/expenses/'
+    curl 'http://localhost:10000/app/expenses/' -H "Authorization: Basic YWRtaW46YWRtaW4="
     [
       {
         "date": "09/02/18",
@@ -60,7 +60,7 @@ The following cURL commands can be used to interact with the endpoint:
       }
     ]
 #### Get a single expense
-    curl 'http://localhost:10000/app/expenses/1'
+    curl 'http://localhost:10000/app/expenses/1' -H "Authorization: Basic YWRtaW46YWRtaW4="
     {
       "date": "09/02/18",
       "amount": 10.2,
@@ -69,10 +69,10 @@ The following cURL commands can be used to interact with the endpoint:
     }
 #### Save an expense
 
-    curl -v -X POST 'http://localhost:10000/app/expenses' -d '{"date":"12/02/18", "reason":"Test #1", "amount": 1000}' -H "Content-Type: application/json"
+    curl -v -X POST 'http://localhost:10000/app/expenses' -d '{"date":"12/02/18", "reason":"Test #1", "amount": 1000}' -H "Content-Type: application/json" -H "Authorization: Basic YWRtaW46YWRtaW4="
 
 #### Delete an expense
-    curl -X "DELETE" 'http://localhost:10000/app/expenses/1'
+    curl -X "DELETE" 'http://localhost:10000/app/expenses/1' -H "Authorization: Basic YWRtaW46YWRtaW4="
 
 ### Frontend
 1. Within the project root run `npm install -g gulp && npm install` and then `gulp`

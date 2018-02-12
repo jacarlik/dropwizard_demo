@@ -3,9 +3,12 @@ package com.engage.expenses.resources;
 import com.codahale.metrics.annotation.Timed;
 import com.engage.expenses.api.ExpenseRecord;
 import com.engage.expenses.api.ExpenseRecordTax;
-import com.engage.expenses.service.ExpensesService;
+import com.engage.expenses.core.ExpensesService;
+import com.engage.expenses.core.auth.User;
 import com.google.common.collect.ImmutableList;
+import io.dropwizard.auth.Auth;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.DELETE;
@@ -22,7 +25,6 @@ import java.util.List;
  * Expenses resource
  *
  * Response codes:
- *
  * 1.) BAD_REQUEST (400)           - Unexpected fields found in the request, missing values and JSON parsing exceptions in general
  * 2.) UNPROCESSABLE_ENTITY (422)  - Validation failures (contains explanation in the payload)
  * 3.) INTERNAL_SERVER_ERROR (500) - Indicates a failure such as DB not being accessible
@@ -44,11 +46,13 @@ public class ExpenseResource
     /**
      * Retrieve a list of all expenses
      *
+     * @param user User
      * @return A list of expenses or an empty list if none are found
      */
+    @RolesAllowed({ "ADMIN" })
     @GET
     @Timed
-    public Response getExpenses()
+    public Response getExpenses(@Auth User user)
     {
         List<ExpenseRecordTax> expenses = m_expensesService.getExpenses();
         if (expenses.isEmpty())
@@ -62,12 +66,14 @@ public class ExpenseResource
      * Retrieve a single expense tax record
      *
      * @param id Expense ID
+     * @param user User
      * @return Expense tax record or an empty response if a matching record hasn't been found
      */
+    @RolesAllowed({ "ADMIN" })
     @GET
     @Timed
     @Path("{id}")
-    public Response getExpense(@PathParam("id") final int id)
+    public Response getExpense(@PathParam("id") final int id, @Auth User user)
     {
         return Response.ok(m_expensesService.getExpense(id)).build();
     }
@@ -76,11 +82,13 @@ public class ExpenseResource
      * Saves new expense to the DB
      *
      * @param expense Expense record
+     * @param user User
      * @return Expense ID for the newly created record
      */
+    @RolesAllowed({ "ADMIN" })
     @POST
     @Timed
-    public Response saveExpense(@NotNull @Valid final ExpenseRecord expense)
+    public Response saveExpense(@NotNull @Valid final ExpenseRecord expense, @Auth User user)
     {
         return Response.ok(m_expensesService.saveExpense(expense)).build();
     }
@@ -89,12 +97,14 @@ public class ExpenseResource
      * Remove an expense record by referencing its ID
      *
      * @param id Expense record ID
+     * @param user User
      * @return Status 1 in case of success, otherwise 0
      */
+    @RolesAllowed({ "ADMIN" })
     @DELETE
     @Timed
     @Path("{id}")
-    public Response deleteExpense(@PathParam("id") final int id)
+    public Response deleteExpense(@PathParam("id") final int id, @Auth User user)
     {
         return Response.ok(m_expensesService.deleteExpense(id)).build();
     }
