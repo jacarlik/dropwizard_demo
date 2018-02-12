@@ -90,13 +90,6 @@
   <dependencies>
     <dependency>
       <groupId>io.dropwizard</groupId>
-      <artifactId>dropwizard-bom</artifactId>
-      <version>1.2.3</version>
-      <type>pom</type>
-      <scope>import</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.dropwizard</groupId>
       <artifactId>dropwizard-testing</artifactId>
       <version>1.2.3</version>
       <scope>test</scope>
@@ -126,6 +119,12 @@
           <groupId>org.hamcrest</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>com.tngtech.java</groupId>
+      <artifactId>junit-dataprovider</artifactId>
+      <version>1.13.1</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.hamcrest</groupId>
@@ -162,6 +161,17 @@
       </plugin>
     </plugins>
   </reporting>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.dropwizard</groupId>
+        <artifactId>dropwizard-bom</artifactId>
+        <version>${dropwizard.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <properties>
     <dropwizard.version>1.2.3</dropwizard.version>
     <mainClass>com.engage.expenses.ExpensesApplication</mainClass>

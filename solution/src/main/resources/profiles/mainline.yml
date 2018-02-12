@@ -1,10 +1,17 @@
+# Represents mainline profile used for development and testing; other profiles could be configured for pre-release and production
 logging:
-  level: INFO
+  level: DEBUG
   loggers:
-    com.engage.expenses: INFO
+    com.engage.expenses: DEBUG
 
 server:
-  rootPath: /api/*
+  rootPath: /app/*
+  applicationConnectors:
+  - type: http
+    port: 10000
+  adminConnectors:
+  - type: http
+    port: 10001
 
 database:
   driverClass: org.postgresql.Driver
@@ -20,4 +27,4 @@ database:
   evictionInterval: 10s
   minIdleTime: 1 minute
 
-dateFormat: yyyy-MM-dd'T'HH:mmZ
+dateFormat: dd/MM/yy

@@ -30,6 +30,11 @@ public abstract class ExpensesService
         return expenseDao().getExpenses();
     }
 
+    public ExpenseRecordTax getExpense(int id)
+    {
+        return expenseDao().getExpense(id);
+    }
+
     public int saveExpense(ExpenseRecord expense)
     {
         // Strip potential XSS from the "reason" field; an alternative would be return non-200 response to the client, indicating a bad input
@@ -38,8 +43,15 @@ public abstract class ExpensesService
         );
     }
 
+    public int deleteExpense(final int id)
+    {
+        return expenseDao().deleteExpense(id);
+    }
+
     /**
      * Attempt to retrieve expenses in order to determine the health status of the service
+     *
+     * @return Exception details if health check failed; otherwise null
      */
     public String performHealthCheck()
     {

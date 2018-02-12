@@ -13,9 +13,11 @@ module.exports = {
 	fonts: "//fast.fonts.net/jsapi/8f4aef36-1a46-44be-a573-99686bfcc33b.js",
 
 	// The root directory for all api calls
-	apiroot: "/app",
+	apiroot: "http://localhost:10000/app",
 
 	// Root directory for static content
-	staticRoot: "/"
+	staticRoot: "/",
 
+	// API for current and historical foreign exchange (forex) rates published by the European Central Bank
+	forexApi: "https://api.fixer.io/"
 };

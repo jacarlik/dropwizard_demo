@@ -3,6 +3,7 @@ package com.engage.expenses.resources;
 import com.engage.expenses.api.ExpenseRecord;
 import com.engage.expenses.api.ExpenseRecordTax;
 import com.engage.expenses.service.ExpensesService;
+import com.engage.expenses.util.CommonUtils;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -28,17 +29,18 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 
+/**
+ * Expenses service resource tests
+ *
+ * @author jklarica
+ * @since 2018-02-10
+ */
 public class ExpenseResourceTest
 {
     private static final ExpensesService EXPENSES_SERVICE = mock(ExpensesService.class);
     private final ExpenseRecord EXPENSE_RECORD = new ExpenseRecord(LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), "Test", "GBR");
-    private final ExpenseRecordTax EXPENSE_RECORD_TAX = new ExpenseRecordTax(0, LocalDate.parse("2018-02-10"), new BigDecimal("1.7"), "Test");
-    private static final ObjectMapper MAPPER = Jackson.newObjectMapper();
-
-    static
-    {
-        MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    }
+    private final ExpenseRecordTax EXPENSE_RECORD_TAX = new ExpenseRecordTax(0, LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), new BigDecimal("1.7"), "Test");
+    private static final ObjectMapper MAPPER = CommonUtils.getObjectMapper();
 
     @ClassRule
     public static ResourceTestRule RESOURCES = ResourceTestRule.builder()

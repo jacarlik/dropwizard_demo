@@ -4,7 +4,13 @@ logging:
     com.engage.expenses: INFO
 
 server:
-  rootPath: /api/*
+  rootPath: /app/*
+  applicationConnectors:
+  - type: http
+    port: 10000
+  adminConnectors:
+  - type: http
+    port: 10001
 
 database:
   driverClass: org.postgresql.Driver
@@ -20,4 +26,4 @@ database:
   evictionInterval: 10s
   minIdleTime: 1 minute
 
-dateFormat: yyyy-MM-dd'T'HH:mmZ
+dateFormat: dd/MM/yy

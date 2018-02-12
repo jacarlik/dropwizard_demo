@@ -2,9 +2,12 @@ package com.engage.expenses.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,19 +26,23 @@ public class ExpenseRecord
     private int m_id;
 
     @JsonProperty("date")
-    @NotNull
+    @NotNull(message = "Date should not be null")
     private LocalDate m_date;
 
     @JsonProperty("amount")
-    @NotNull @Range(min = 1)
+    @NotNull(message = "Amount should not be null")
+    @Range(min = 1, max = 1000000, message = "Amount should be in range [1, 1000000]")
+    @Digits(integer = 1000000, fraction = 2, message = "Amount should contain not more than 2 decimal places")
     private BigDecimal m_amount;
 
     @JsonProperty("reason")
-    @NotEmpty
+    @NotBlank(message = "Reason should not be empty or null")
+    @Length(max = 800, message = "Maximum reason length is limited to 800 characters")
     private String m_reason;
 
     @JsonProperty("country")
-    @NotEmpty
+    @NotBlank(message = "Country code should not be empty or null")
+    @Length(min = 3, max = 3, message = "ISO alpha-3 country code should be used, containing exactly 3 characters")
     private String m_country;
 
     ExpenseRecord() {
