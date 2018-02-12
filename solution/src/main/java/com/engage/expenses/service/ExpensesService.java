@@ -18,8 +18,8 @@ import java.util.List;
  */
 public abstract class ExpensesService
 {
-    private static final String DATABASE_ACCESS_ERROR = "Could not reach the PostgreSQL database. The database may be down or there may be network connectivity issues. Details: ";
-    private static final String DATABASE_CONNECTION_ERROR = "Could not create a connection to the MySQL database. The database configurations are likely incorrect. Details: ";
+    private static final String DATABASE_ACCESS_ERROR = "Could not reach the database. The database may be down or there may be network connectivity issues. Details: ";
+    private static final String DATABASE_CONNECTION_ERROR = "Could not create a connection to the database. The database configurations are likely incorrect. Details: ";
     private static final String UNEXPECTED_DATABASE_ERROR = "Unexpected error occurred while attempting to reach the database. Details: ";
 
     @CreateSqlObject
@@ -35,14 +35,32 @@ public abstract class ExpensesService
         return expenseDao().getExpense(id);
     }
 
+    /**
+     * Saves new expense to the DB
+     *
+     * Also, it strips away potential XSS characters from the "reason" field, since
+     * it's the only loose text field, allowing users to plug-in anything.
+     *
+     * @param expense Expense record
+     * @return Expense ID for the newly created record
+     */
     public int saveExpense(ExpenseRecord expense)
     {
-        // Strip potential XSS from the "reason" field; an alternative would be return non-200 response to the client, indicating a bad input
         return expenseDao().saveExpense(
-            new ExpenseRecord(expense.getDate(), expense.getAmount(), CommonUtils.stripXSS(expense.getReason()), expense.getCountry())
+            new ExpenseRecord(
+                expense.getDate(),
+                expense.getAmount(),
+                CommonUtils.stripXSS(expense.getReason())
+            )
         );
     }
 
+    /**
+     * Remove an expense record by referencing its ID
+     *
+     * @param id Expense record ID
+     * @return Status 1 in case of success, otherwise 0
+     */
     public int deleteExpense(final int id)
     {
         return expenseDao().deleteExpense(id);

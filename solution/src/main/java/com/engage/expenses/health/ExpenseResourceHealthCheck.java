@@ -3,6 +3,12 @@ package com.engage.expenses.health;
 import com.codahale.metrics.health.HealthCheck;
 import com.engage.expenses.service.ExpensesService;
 
+/**
+ * Health checks for the expenses application
+ *
+ * @author jklarica
+ * @since 2018-02-09
+ */
 public class ExpenseResourceHealthCheck extends HealthCheck
 {
     private static final String HEALTHY_MESSAGE = "Expenses service is healthy";

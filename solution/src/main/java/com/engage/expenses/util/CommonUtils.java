@@ -22,6 +22,11 @@ public class CommonUtils
 {
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yy");
 
+    /**
+     * Retrieve object mapper instance
+     *
+     * @return Object mapper
+     */
     @VisibleForTesting
     public static ObjectMapper getObjectMapper()
     {

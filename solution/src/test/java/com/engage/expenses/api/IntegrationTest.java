@@ -22,12 +22,9 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Expenses service integration tests
+ * Expenses application integration tests
  *
  * @author jklarica
  * @since 2018-02-10
@@ -50,99 +47,66 @@ public class IntegrationTest
         RESOURCE_URI = String.format("http://localhost:%d/app/expenses", RULE.getLocalPort());
     }
 
-    @Test
-    public void testExpenses()
-    {
-        Response saveExpenseResponse = _saveExpense("{\"date\":\"01/01/18\", \"amount\":10, \"reason\":\"Test\", \"country\": \"GBR\"}");
-        int id = saveExpenseResponse.readEntity(Integer.class);
-        Assert.assertTrue(id > 0);
-
-        Response getExpensesResponse = _getExpenses();
-        List<ExpenseRecordTax> expenses = Arrays.asList(getExpensesResponse.readEntity(ExpenseRecordTax[].class));
-        Assert.assertTrue(getExpensesResponse.getStatus() == HttpStatus.SC_OK);
-        Assert.assertTrue(expenses.stream().map(ExpenseRecordTax::getId).collect(Collectors.toList()).contains(id));
-    }
-
     @DataProvider
     public static Object[][] invalidInputDataProvider()
     {
         return new Object[][]
         {
             {
-                "Missing country code and amount should result in HTTP 422 status code",
-                "{\"date\":\"01/01/18\", \"reason\":\"Test\"}",
-                HttpStatus.SC_UNPROCESSABLE_ENTITY
-            },
-            {
-                "Invalid country code should result in HTTP 422 status code",
-                "{\"date\":\"01/01/18\", \"amount\":10, \"reason\":\"Test\", \"country\": \"BAD_COUNTRY_CODE\"}",
-                HttpStatus.SC_UNPROCESSABLE_ENTITY
-            },
-            {
                 "Negative amount should result in HTTP 422 status code",
-                "{\"date\":\"01/01/18\", \"amount\":-1, \"reason\":\"Test\", \"country\":\"GBR\"}",
+                "{\"date\":\"01/01/18\", \"amount\":-1, \"reason\":\"Test\"}",
                 HttpStatus.SC_UNPROCESSABLE_ENTITY
             },
             {
                 "Amount containing more than 2 decimal points should result in HTTP 422 status code",
-                "{\"date\":\"01/01/18\", \"amount\":10.234, \"reason\":\"Test\", \"country\":\"GBR\"}",
+                "{\"date\":\"01/01/18\", \"amount\":10.234, \"reason\":\"Test\"}",
                 HttpStatus.SC_UNPROCESSABLE_ENTITY
             },
             {
                 "Amount exceeding one million should result in HTTP 422 status code",
-                "{\"date\":\"01/01/18\", \"amount\":1000001, \"reason\":\"Test\", \"country\":\"GBR\"}",
-                HttpStatus.SC_UNPROCESSABLE_ENTITY
-            },
-            {
-                "Empty country code should result in HTTP 422 status code",
-                "{\"date\":\"01/01/18\", \"amount\":100, \"reason\":\"Test\", \"country\":\"\"}",
+                "{\"date\":\"01/01/18\", \"amount\":1000001, \"reason\":\"Test\"}",
                 HttpStatus.SC_UNPROCESSABLE_ENTITY
             },
             {
                 "Empty reason should result in HTTP 422 status code",
-                "{\"date\":\"01/01/18\", \"amount\":10, \"reason\":\"\", \"country\":\"GBR\"}",
+                "{\"date\":\"01/01/18\", \"amount\":10, \"reason\":\"\"}",
                 HttpStatus.SC_UNPROCESSABLE_ENTITY
             },
             {
                 "Reason longer than 800 characters should result in HTTP 422 status code",
-                "{\"date\":\"01/01/18\", \"amount\":1000, \"reason\":\"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\", \"country\":\"GBR\"}",
+                "{\"date\":\"01/01/18\", \"amount\":1000, \"reason\":\"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?\"}",
                 HttpStatus.SC_UNPROCESSABLE_ENTITY
             },
             {
                 "Empty amount should result in HTTP 422 status code",
-                "{\"date\":\"01/01/18\", \"amount\":\"\", \"reason\":\"Test\", \"country\":\"GBR\"}",
+                "{\"date\":\"01/01/18\", \"amount\":\"\", \"reason\":\"Test\"}",
                 HttpStatus.SC_UNPROCESSABLE_ENTITY
             },
             {
                 "Empty date should result in HTTP 400 status code",
-                "{\"date\":\"\", \"amount\":10, \"reason\":\"Test\", \"country\":\"GBR\"}",
+                "{\"date\":\"\", \"amount\":10, \"reason\":\"Test\"}",
                 HttpStatus.SC_BAD_REQUEST
             },
             {
                 "Invalid date should result in HTTP 400 status code",
-                "{\"date\":\"2020-01-XZY\", \"amount\":10, \"reason\":\"Test\", \"country\":\"GBR\"}",
+                "{\"date\":\"2020-01-XZY\", \"amount\":10, \"reason\":\"Test\"}",
                 HttpStatus.SC_BAD_REQUEST
             },
             {
                 "Null reason should result in HTTP 400 status code",
-                "{\"date\":\"01/01/18\", \"amount\":10, \"reason\":, \"country\":\"GBR\"}",
+                "{\"date\":\"01/01/18\", \"amount\":10, \"reason\":}",
                 HttpStatus.SC_BAD_REQUEST
             },
             {
                 "Null amount should result in HTTP 400 status code",
-                "{\"date\":\"01/01/18\", \"amount\":, \"reason\":\"Test\", \"country\":\"GBR\"}",
+                "{\"date\":\"01/01/18\", \"amount\":, \"reason\":\"Test\"}",
                 HttpStatus.SC_BAD_REQUEST
             },
             {
                 "Null date should result in HTTP 400 status code",
-                "{\"date\":, \"amount\":10, \"reason\":\"Test\", \"country\":\"GBR\"}",
+                "{\"date\":, \"amount\":10, \"reason\":\"Test\"}",
                 HttpStatus.SC_BAD_REQUEST
-            },
-            {
-                "Null country code should result in HTTP 400 status code",
-                "{\"date\":\"01/01/18\", \"amount\":10, \"reason\":\"Test\", \"country\":}",
-                HttpStatus.SC_BAD_REQUEST
-            },
+            }
         };
     }
 
@@ -159,19 +123,19 @@ public class IntegrationTest
         return new Object[][]
             {
                 {
-                    "For total amount of 10.2 standard UK VAT should be 1.70",
-                    "{\"date\":\"01/01/18\", \"amount\":10.2, \"reason\":\"Test\", \"country\": \"GBR\"}",
+                    "For total amount of 10.2 VAT should be 1.70",
+                    "{\"date\":\"01/01/18\", \"amount\":10.2, \"reason\":\"Test\"}",
                     new BigDecimal("1.70")
                 },
                 {
-                    "For total amount of 15000 standard Isle of Man VAT should be 2500.00",
-                    "{\"date\":\"01/01/18\", \"amount\":15000, \"reason\":\"Test\", \"country\": \"IMN\"}",
+                    "For total amount of 15000 VAT should be 2500.00",
+                    "{\"date\":\"01/01/18\", \"amount\":15000, \"reason\":\"Test\"}",
                     new BigDecimal("2500.00")
                 },
                 {
-                    "For total amount of 150.43 standard Guernsey VAT should be 0.00",
-                    "{\"date\":\"01/01/18\", \"amount\":15000, \"reason\":\"Test\", \"country\": \"GGY\"}",
-                    new BigDecimal("0.00")
+                    "For total amount of 150.43 VAT should be 0.00",
+                    "{\"date\":\"01/01/18\", \"amount\":150.43, \"reason\":\"Test\"}",
+                    new BigDecimal("25.07")
                 }
             };
     }

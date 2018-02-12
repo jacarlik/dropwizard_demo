@@ -1,4 +1,4 @@
-# Represents mainline profile used for development and testing; other profiles could be configured for pre-release and production
+# Represents mainline profile used for development/testing; other profiles could be configured for pre-release and production
 logging:
   level: DEBUG
   loggers:

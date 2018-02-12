@@ -2,7 +2,9 @@ package com.engage.expenses.resources;
 
 import com.codahale.metrics.annotation.Timed;
 import com.engage.expenses.api.ExpenseRecord;
+import com.engage.expenses.api.ExpenseRecordTax;
 import com.engage.expenses.service.ExpensesService;
+import com.google.common.collect.ImmutableList;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -14,6 +16,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 /**
  * Expenses resource
@@ -41,20 +44,25 @@ public class ExpenseResource
     /**
      * Retrieve a list of all expenses
      *
-     * @return Response object
+     * @return A list of expenses or an empty list if none are found
      */
     @GET
     @Timed
     public Response getExpenses()
     {
-        return Response.ok(m_expensesService.getExpenses()).build();
+        List<ExpenseRecordTax> expenses = m_expensesService.getExpenses();
+        if (expenses.isEmpty())
+        {
+            Response.ok(ImmutableList.of()).build();
+        }
+        return Response.ok(expenses).build();
     }
 
     /**
      * Retrieve a single expense tax record
      *
      * @param id Expense ID
-     * @return Expense tax record
+     * @return Expense tax record or an empty response if a matching record hasn't been found
      */
     @GET
     @Timed
@@ -65,10 +73,10 @@ public class ExpenseResource
     }
 
     /**
-     * Save a new expense record to the DB
+     * Saves new expense to the DB
      *
-     * @param expense Expense object
-     * @return Response object
+     * @param expense Expense record
+     * @return Expense ID for the newly created record
      */
     @POST
     @Timed
@@ -78,10 +86,10 @@ public class ExpenseResource
     }
 
     /**
-     * Delete a single expense record from the DB
+     * Remove an expense record by referencing its ID
      *
      * @param id Expense record ID
-     * @return Status 1 indicates success, 0 that no records were deleted
+     * @return Status 1 in case of success, otherwise 0
      */
     @DELETE
     @Timed

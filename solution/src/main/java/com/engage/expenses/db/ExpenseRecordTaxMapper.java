@@ -15,16 +15,15 @@ import java.sql.SQLException;
  */
 public class ExpenseRecordTaxMapper implements ResultSetMapper<ExpenseRecordTax>
 {
-    private static final String ID = "id";
-    private static final String DATE = "date";
-    private static final String AMOUNT = "amount";
     private static final String VAT = "vat";
-    private static final String REASON = "reason";
 
     public ExpenseRecordTax map(int i,
                                 ResultSet rs,
                                 StatementContext context) throws SQLException
     {
-        return new ExpenseRecordTax(rs.getInt(ID), rs.getDate(DATE).toLocalDate(), rs.getBigDecimal(AMOUNT), rs.getBigDecimal(VAT), rs.getString(REASON));
+        return new ExpenseRecordTax(rs.getDate(ExpenseMapper.DATE).toLocalDate(),
+                                    rs.getBigDecimal(ExpenseMapper.AMOUNT),
+                                    rs.getBigDecimal(VAT),
+                                    rs.getString(ExpenseMapper.REASON));
     }
 }

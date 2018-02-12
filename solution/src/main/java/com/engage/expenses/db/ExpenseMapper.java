@@ -15,10 +15,9 @@ import java.sql.SQLException;
  */
 public class ExpenseMapper implements ResultSetMapper<ExpenseRecord>
 {
-    private static final String DATE = "date";
-    private static final String AMOUNT = "amount";
-    private static final String REASON = "reason";
-    private static final String COUNTRY = "country";
+    static final String DATE = "date";
+    static final String AMOUNT = "amount";
+    static final String REASON = "reason";
 
     public ExpenseRecord map(int i,
                              ResultSet resultSet,
@@ -26,7 +25,6 @@ public class ExpenseMapper implements ResultSetMapper<ExpenseRecord>
     {
         return new ExpenseRecord(resultSet.getDate(DATE).toLocalDate(),
                                  resultSet.getBigDecimal(AMOUNT),
-                                 resultSet.getString(REASON),
-                                 resultSet.getString(COUNTRY));
+                                 resultSet.getString(REASON));
     }
 }

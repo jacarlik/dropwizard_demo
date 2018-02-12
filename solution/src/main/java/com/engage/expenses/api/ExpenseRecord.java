@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Digits;
@@ -19,7 +18,7 @@ import java.util.Objects;
  * @author jklarica
  * @since 2018-02-10
  */
-@JsonPropertyOrder({ "id", "date", "amount", "reason", "country" })
+@JsonPropertyOrder({ "id", "date", "amount", "reason" })
 public class ExpenseRecord
 {
     @JsonProperty("id")
@@ -40,28 +39,14 @@ public class ExpenseRecord
     @Length(max = 800, message = "Maximum reason length is limited to 800 characters")
     private String m_reason;
 
-    @JsonProperty("country")
-    @NotBlank(message = "Country code should not be empty or null")
-    @Length(min = 3, max = 3, message = "ISO alpha-3 country code should be used, containing exactly 3 characters")
-    private String m_country;
-
     ExpenseRecord() {
     }
 
-    ExpenseRecord(int id, LocalDate date, BigDecimal amount, String reason)
-    {
-        m_id = id;
-        m_date = date;
-        m_amount = amount;
-        m_reason = reason;
-    }
-
-    public ExpenseRecord(LocalDate date, BigDecimal amount, String reason, String country)
+    public ExpenseRecord(LocalDate date, BigDecimal amount, String reason)
     {
         m_date = date;
         m_amount = amount;
         m_reason = reason;
-        m_country = country;
     }
 
     public int getId()
@@ -104,16 +89,6 @@ public class ExpenseRecord
         m_reason = reason;
     }
 
-    public String getCountry()
-    {
-        return m_country;
-    }
-
-    public void setCountry(String country)
-    {
-        m_country = country;
-    }
-
     @Override public boolean equals(Object o)
     {
         if (this == o)
@@ -124,13 +99,12 @@ public class ExpenseRecord
         return m_id == that.m_id &&
             Objects.equals(m_date, that.m_date) &&
             Objects.equals(m_amount, that.m_amount) &&
-            Objects.equals(m_reason, that.m_reason) &&
-            Objects.equals(m_country, that.m_country);
+            Objects.equals(m_reason, that.m_reason);
     }
 
     @Override public int hashCode()
     {
-        return Objects.hash(m_id, m_date, m_amount, m_reason, m_country);
+        return Objects.hash(m_id, m_date, m_amount, m_reason);
     }
 
     @Override public String toString()
@@ -140,7 +114,6 @@ public class ExpenseRecord
             ", m_date=" + m_date +
             ", m_amount=" + m_amount +
             ", m_reason='" + m_reason + '\'' +
-            ", m_country='" + m_country + '\'' +
             '}';
     }
 }

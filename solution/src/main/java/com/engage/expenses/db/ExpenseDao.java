@@ -21,14 +21,14 @@ import java.util.List;
 @RegisterMapper({ExpenseMapper.class, ExpenseRecordTaxMapper.class})
 public interface ExpenseDao
 {
-    @SqlQuery("SELECT e.id, e.date, e.amount, ROUND(e.amount - (e.amount / (1 + r.rate)), 2) AS vat, e.reason FROM t_expense e INNER JOIN t_standard_vat_rate r ON r.country = e.country;")
+    @SqlQuery("SELECT id, date, amount, ROUND(amount - (amount / 1.2), 2) AS vat, reason FROM t_expense;")
     List<ExpenseRecordTax> getExpenses();
 
-    @SqlQuery("SELECT e.id, e.date, e.amount, ROUND(e.amount - (e.amount / (1 + r.rate)), 2) AS vat, e.reason FROM t_expense e INNER JOIN t_standard_vat_rate r ON r.country = e.country WHERE e.id = :id;")
+    @SqlQuery("SELECT id, date, amount, ROUND(amount - (amount / 1.2), 2) AS vat, reason FROM t_expense WHERE id = :id;")
     ExpenseRecordTax getExpense(@Bind("id") final int id);
 
     @Transaction
-    @SqlUpdate("INSERT INTO t_expense(date, amount, reason, country) VALUES(:date, :amount, :reason, :country)")
+    @SqlUpdate("INSERT INTO t_expense(date, amount, reason) VALUES(:date, :amount, :reason)")
     @GetGeneratedKeys
     int saveExpense(@BindBean final ExpenseRecord expense);
 

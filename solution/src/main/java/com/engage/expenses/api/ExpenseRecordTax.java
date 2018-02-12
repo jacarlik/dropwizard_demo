@@ -15,21 +15,20 @@ import java.util.Objects;
  * @author jklarica
  * @since 2018-02-10
  */
-@JsonIgnoreProperties({ "country" })
-@JsonPropertyOrder({ "id", "date", "vat", "reason" })
+@JsonIgnoreProperties({ "id" })
+@JsonPropertyOrder({ "date", "amount", "vat", "reason" })
 public class ExpenseRecordTax extends ExpenseRecord
 {
     @JsonProperty("vat")
     private BigDecimal m_vat;
 
     @JsonCreator
-    public ExpenseRecordTax(@JsonProperty("id") int id,
-                            @JsonProperty("date") LocalDate date,
+    public ExpenseRecordTax(@JsonProperty("date") LocalDate date,
                             @JsonProperty("amount") BigDecimal amount,
                             @JsonProperty("vat") BigDecimal vat,
                             @JsonProperty("reason") String reason)
     {
-        super(id, date, amount, reason);
+        super(date, amount, reason);
         m_vat = vat;
     }
 

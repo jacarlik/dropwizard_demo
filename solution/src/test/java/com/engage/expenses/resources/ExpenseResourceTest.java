@@ -4,11 +4,8 @@ import com.engage.expenses.api.ExpenseRecord;
 import com.engage.expenses.api.ExpenseRecordTax;
 import com.engage.expenses.service.ExpensesService;
 import com.engage.expenses.util.CommonUtils;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.collect.ImmutableList;
-import io.dropwizard.jackson.Jackson;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
 import org.junit.Before;
@@ -38,8 +35,8 @@ import static org.mockito.Mockito.verify;
 public class ExpenseResourceTest
 {
     private static final ExpensesService EXPENSES_SERVICE = mock(ExpensesService.class);
-    private final ExpenseRecord EXPENSE_RECORD = new ExpenseRecord(LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), "Test", "GBR");
-    private final ExpenseRecordTax EXPENSE_RECORD_TAX = new ExpenseRecordTax(0, LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), new BigDecimal("1.7"), "Test");
+    private final ExpenseRecord EXPENSE_RECORD = new ExpenseRecord(LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), "Test");
+    private final ExpenseRecordTax EXPENSE_RECORD_TAX = new ExpenseRecordTax(LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), new BigDecimal("1.7"), "Test");
     private static final ObjectMapper MAPPER = CommonUtils.getObjectMapper();
 
     @ClassRule
@@ -52,7 +49,9 @@ public class ExpenseResourceTest
     public void setup()
     {
         when(EXPENSES_SERVICE.getExpenses()).thenReturn(ImmutableList.of(EXPENSE_RECORD_TAX));
+        when(EXPENSES_SERVICE.getExpense(1)).thenReturn(EXPENSE_RECORD_TAX);
         when(EXPENSES_SERVICE.saveExpense(EXPENSE_RECORD)).thenReturn(0);
+        when(EXPENSES_SERVICE.deleteExpense(1)).thenReturn(1);
     }
 
     @After
@@ -64,15 +63,51 @@ public class ExpenseResourceTest
     @Test
     public void testGetExpenses()
     {
-        List<ExpenseRecordTax> expenses = Arrays.asList(RESOURCES.target("/expenses").request().get().readEntity(ExpenseRecordTax[].class));
+        List<ExpenseRecordTax> expenses = Arrays.asList(
+            RESOURCES.target("/expenses")
+                .request()
+                .get()
+                .readEntity(ExpenseRecordTax[].class)
+        );
         assertThat(expenses.get(0)).isEqualTo(EXPENSE_RECORD_TAX);
         verify(EXPENSES_SERVICE).getExpenses();
     }
 
     @Test
+    public void testGetExpense()
+    {
+        ExpenseRecordTax expense = RESOURCES.target("/expenses")
+            .path(String.valueOf(1))
+            .request()
+            .get()
+            .readEntity(ExpenseRecordTax.class);
+
+        assertThat(expense).isEqualTo(EXPENSE_RECORD_TAX);
+        verify(EXPENSES_SERVICE).getExpense(1);
+    }
+
+    @Test
     public void testSaveExpense()
     {
-        assertThat(RESOURCES.target("/expenses").request().post(Entity.entity(EXPENSE_RECORD, MediaType.APPLICATION_JSON)).readEntity(Integer.class)).isEqualTo(0);
+        assertThat(
+            RESOURCES.target("/expenses")
+                .request()
+                .post(Entity.entity(EXPENSE_RECORD, MediaType.APPLICATION_JSON))
+                .readEntity(Integer.class)
+        ).isEqualTo(0);
         verify(EXPENSES_SERVICE).saveExpense(EXPENSE_RECORD);
+    }
+
+    @Test
+    public void testDeleteExpense()
+    {
+        assertThat(
+            RESOURCES.target("/expenses")
+                .path(String.valueOf(1))
+                .request()
+                .delete()
+                .readEntity(Integer.class)
+        ).isEqualTo(1);
+        verify(EXPENSES_SERVICE).deleteExpense(1);
     }
 }

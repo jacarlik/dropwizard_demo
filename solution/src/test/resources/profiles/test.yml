@@ -1,3 +1,4 @@
+# Represents a profile used for running functional/integration tests (in this case, it's same as mainline.ylm due to not having a real production environment)
 logging:
   level: INFO
   loggers:
