@@ -17,7 +17,7 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
     $rootScope.selectTabSection("expenses", 0);
 
     const amountPattern = /^(\d+(\.\d+)?)\s?(EUR)$/i;
-    var restExpenses = $restalchemy.init({ root: $config.apiroot }).at("expenses");
+    var restExpenses = $restalchemy.init({ root: $config.apiroot, headers: $config.requestHeaders }).at("expenses");
     var forexApi = $restalchemy.init({ root: $config.forexApi }).at("latest");
 
     $scope.dateOptions = {
