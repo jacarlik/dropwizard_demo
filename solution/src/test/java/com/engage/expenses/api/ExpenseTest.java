@@ -1,11 +1,10 @@
 package com.engage.expenses.api;
 
 import static io.dropwizard.testing.FixtureHelpers.*;
-import static org.hamcrest.Matchers.*;
 
 import com.engage.expenses.util.CommonUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.MatcherAssert;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,40 +37,40 @@ public class ExpenseTest
     @Test
     public void expenseRecordSerializesToJSON() throws Exception
     {
-        MatcherAssert.assertThat(
-            "Assert that ExpenseRecord can be serialized to JSON",
-            MAPPER.writeValueAsString(EXPENSE_RECORD),
-            is(equalTo(fixture("fixtures/expense_record.json")))
+        Assert.assertEquals(
+            "ExpenseRecord can be serialized to JSON",
+            fixture("fixtures/expense_record.json"),
+            MAPPER.writeValueAsString(EXPENSE_RECORD)
         );
     }
 
     @Test
     public void expenseRecordDeserializesFromJSON() throws Exception
     {
-        MatcherAssert.assertThat(
-            "Assert that ExpenseRecord can be deserialized from JSON",
-            MAPPER.readValue(fixture("fixtures/expense_record.json"), ExpenseRecord.class),
-            is(EXPENSE_RECORD)
+        Assert.assertEquals(
+            "ExpenseRecord can be deserialized from JSON",
+            EXPENSE_RECORD,
+            MAPPER.readValue(fixture("fixtures/expense_record.json"), ExpenseRecord.class)
         );
     }
 
     @Test
     public void expenseRecordTaxSerializesToJSON() throws Exception
     {
-        MatcherAssert.assertThat(
-            "Assert that ExpenseRecordTax can be serialized to JSON",
-            MAPPER.writeValueAsString(EXPENSE_RECORD_TAX),
-            is(equalTo(fixture("fixtures/expense_record_tax.json")))
+        Assert.assertEquals(
+            "ExpenseRecordTax can be serialized to JSON",
+            fixture("fixtures/expense_record_tax.json"),
+            MAPPER.writeValueAsString(EXPENSE_RECORD_TAX)
         );
     }
 
     @Test
     public void expenseRecordTaxDeserializesFromJSON() throws Exception
     {
-        MatcherAssert.assertThat(
-            "Assert that ExpenseRecordTax can be deserialized from JSON",
-            MAPPER.readValue(fixture("fixtures/expense_record_tax.json"), ExpenseRecordTax.class),
-            is(EXPENSE_RECORD_TAX)
+        Assert.assertEquals(
+            "ExpenseRecordTax can be deserialized from JSON",
+            EXPENSE_RECORD_TAX,
+            MAPPER.readValue(fixture("fixtures/expense_record_tax.json"), ExpenseRecordTax.class)
         );
     }
 }

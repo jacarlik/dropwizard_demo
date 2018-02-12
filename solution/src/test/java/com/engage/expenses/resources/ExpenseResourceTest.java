@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -18,8 +19,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -69,7 +68,7 @@ public class ExpenseResourceTest
                 .get()
                 .readEntity(ExpenseRecordTax[].class)
         );
-        assertThat(expenses.get(0)).isEqualTo(EXPENSE_RECORD_TAX);
+        Assert.assertEquals("Requested expense records correspond to the list retrieved from the resource", EXPENSE_RECORD_TAX, expenses.get(0));
         verify(EXPENSES_SERVICE).getExpenses();
     }
 
@@ -81,33 +80,37 @@ public class ExpenseResourceTest
             .request()
             .get()
             .readEntity(ExpenseRecordTax.class);
-
-        assertThat(expense).isEqualTo(EXPENSE_RECORD_TAX);
+        Assert.assertEquals("Requested expense record corresponds to the retrieved one", EXPENSE_RECORD_TAX, expense);
         verify(EXPENSES_SERVICE).getExpense(1);
     }
 
     @Test
     public void testSaveExpense()
     {
-        assertThat(
+        Assert.assertEquals(
+            "Expense record can be saved",
+            new Integer(0),
             RESOURCES.target("/expenses")
                 .request()
                 .post(Entity.entity(EXPENSE_RECORD, MediaType.APPLICATION_JSON))
                 .readEntity(Integer.class)
-        ).isEqualTo(0);
+        );
+
         verify(EXPENSES_SERVICE).saveExpense(EXPENSE_RECORD);
     }
 
     @Test
     public void testDeleteExpense()
     {
-        assertThat(
+        Assert.assertEquals(
+            "Expense record can be deleted",
+            new Integer(1),
             RESOURCES.target("/expenses")
                 .path(String.valueOf(1))
                 .request()
                 .delete()
                 .readEntity(Integer.class)
-        ).isEqualTo(1);
+        );
         verify(EXPENSES_SERVICE).deleteExpense(1);
     }
 }
