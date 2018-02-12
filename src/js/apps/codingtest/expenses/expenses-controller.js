@@ -9,42 +9,42 @@ Expenses controller
 var app = angular.module("expenses.controller", []);
 
 app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy", function ExpensesCtrl($rootScope, $scope, $config, $restalchemy) {
-	// Update the headings
-	$rootScope.mainTitle = "Expenses";
-	$rootScope.mainHeading = "Expenses";
+    // Update the headings
+    $rootScope.mainTitle = "Expenses";
+    $rootScope.mainHeading = "Expenses";
 
-	// Update the tab sections
-	$rootScope.selectTabSection("expenses", 0);
+    // Update the tab sections
+    $rootScope.selectTabSection("expenses", 0);
 
     const amountPattern = /^(\d+(\.\d+)?)\s?(EUR)$/i;
     var restExpenses = $restalchemy.init({ root: $config.apiroot }).at("expenses");
     var forexApi = $restalchemy.init({ root: $config.forexApi }).at("latest");
 
-	$scope.dateOptions = {
-		changeMonth: true,
-		changeYear: true,
-		dateFormat: "dd/mm/yy"
-	};
+    $scope.dateOptions = {
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "dd/mm/yy"
+    };
 
-	$scope.errors = null;
+    $scope.errors = null;
 
-	var handleSaveExpenseError = function(response, statusCode) {
+    var handleSaveExpenseError = function(response, statusCode) {
         switch(statusCode) {
-        	// Validation errors
+            // Validation errors
             case 422:
                 response.errors.forEach(
-                	function(part, index, arr) {
-                		arr[index] = part.substr(part.indexOf(" ") + 1);
-                	});
+                    function(part, index, arr) {
+                        arr[index] = part.substr(part.indexOf(" ") + 1);
+                    });
                 $scope.errors = response.errors;
                 break;
-			// Everything else (JSON parse exceptions, unrecoverable errors such as DB being inaccessible, etc.)
+            // Everything else (JSON parse exceptions, unrecoverable errors such as DB being inaccessible, etc.)
             default:
                 $scope.errors = ["" +
-					"Unable to process the request. " +
-					"Please check if the input parameters are correct and contact your " +
-					"customer care agent if the problem still persists."
-				];
+                    "Unable to process the request. " +
+                    "Please check if the input parameters are correct and contact your " +
+                    "customer care agent if the problem still persists."
+                ];
         }
     }
 
@@ -52,18 +52,18 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
         $scope.errors = ["Unable to retrieve currency rates for the API"];
     }
 
-	var loadExpenses = function() {
-		// Retrieve a list of expenses via REST
-		restExpenses.get()
-			.then(function(response) {
-				$scope.errors = [];
-				$scope.expenses = response;
-			})
-			.error(handleSaveExpenseError.bind(this));
-	}
+    var loadExpenses = function() {
+        // Retrieve a list of expenses via REST
+        restExpenses.get()
+            .then(function(response) {
+                $scope.errors = [];
+                $scope.expenses = response;
+            })
+            .error(handleSaveExpenseError.bind(this));
+    }
 
-	var calculateVat = function(amount) {
-		return parseFloat(amount - (amount / 1.2)).toFixed(2);
+    var calculateVat = function(amount) {
+        return parseFloat(amount - (amount / 1.2)).toFixed(2);
     }
 
     $scope.extractVat = function () {
@@ -82,13 +82,13 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
 
     $scope.saveExpense = function () {
         if ($scope.expensesform.$valid) {
-        	var request = {
+            var request = {
                 amount: $scope.newExpense.amount,
-				country: $scope.newExpense.country,
-				date: $scope.newExpense.date,
-				reason: $scope.newExpense.reason
-			};
-			var match = request.amount.match(amountPattern);
+                country: $scope.newExpense.country,
+                date: $scope.newExpense.date,
+                reason: $scope.newExpense.reason
+            };
+            var match = request.amount.match(amountPattern);
             // Amount was specified in EURs, proceed with conversion
             if (match != null) {
                 forexApi.get({base: "EUR", symbols: "GBP"})
@@ -102,23 +102,23 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
                             .error(handleSaveExpenseError.bind(this));
                     })
                     .error(handleGetCurrencyRateError.bind(this))
-			} else {
+            } else {
                 // Post the new expense
                 restExpenses.post(request)
-					.then(function () {
-                    	loadExpenses();
-                	})
-					.error(handleSaveExpenseError.bind(this));
-			}
+                    .then(function () {
+                        loadExpenses();
+                    })
+                    .error(handleSaveExpenseError.bind(this));
+            }
         }
     };
 
-	$scope.clearExpense = function() {
-		$scope.errors = [];
-		$scope.newExpense = {};
-	};
+    $scope.clearExpense = function() {
+        $scope.errors = [];
+        $scope.newExpense = {};
+    };
 
-	// Initialise scope variables
-	loadExpenses();
-	$scope.clearExpense();
+    // Initialise scope variables
+    loadExpenses();
+    $scope.clearExpense();
 }]);
