@@ -49,7 +49,7 @@ The following cURL commands can be used to interact with the endpoint:
   
 #### Get all expenses
 
-    curl 'https://localhost:10000/app/expenses/' -H "Authorization: Basic YWRtaW46YWRtaW4="
+    curl 'https://localhost:8443/app/expenses/' -H "Authorization: Basic YWRtaW46YWRtaW4="
     [
       {
         "date": "09/02/18",
@@ -71,7 +71,7 @@ The following cURL commands can be used to interact with the endpoint:
       }
     ]
 #### Get a single expense
-    curl 'https://localhost:10000/app/expenses/1' -H "Authorization: Basic YWRtaW46YWRtaW4="
+    curl 'https://localhost:8443/app/expenses/1' -H "Authorization: Basic YWRtaW46YWRtaW4="
     {
       "date": "09/02/18",
       "amount": 10.2,
@@ -80,10 +80,10 @@ The following cURL commands can be used to interact with the endpoint:
     }
 #### Save an expense
 
-    curl -v -X POST 'https://localhost:10000/app/expenses' -d '{"date":"12/02/18", "reason":"Test #1", "amount": 1000}' -H "Content-Type: application/json" -H "Authorization: Basic YWRtaW46YWRtaW4="
+    curl -v -X POST 'https://localhost:8443/app/expenses' -d '{"date":"12/02/18", "reason":"Test #1", "amount": 1000}' -H "Content-Type: application/json" -H "Authorization: Basic YWRtaW46YWRtaW4="
 
 #### Delete an expense
-    curl -X "DELETE" 'https://localhost:10000/app/expenses/1' -H "Authorization: Basic YWRtaW46YWRtaW4="
+    curl -X "DELETE" 'https://localhost:8443/app/expenses/1' -H "Authorization: Basic YWRtaW46YWRtaW4="
 
 ### Frontend
 1. Within the project root run `npm install -g gulp && npm install` and then `gulp`
