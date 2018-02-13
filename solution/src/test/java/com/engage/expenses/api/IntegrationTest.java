@@ -22,6 +22,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Expenses application integration tests
@@ -153,6 +155,32 @@ public class IntegrationTest
         Assert.assertEquals(status, 1);
     }
 
+    @DataProvider
+    public static Object[][] getExpensesProvider()
+    {
+        return new Object[][]
+            {
+                {
+                    "With offset 0 and limit 2, 2 records should be retrieved starting from ID 1 to 2", 0, 2, 1, 2
+                },
+                {
+                    "With offset 1 and limit 3, 2 records should be retrieved starting from ID 2 to 3", 1, 3, 2, 2
+                },
+                {
+                    "With offset 0 and limit 3, 3 records should be retrieved starting from ID 1 to 3", 0, 3, 1, 3
+                }
+            };
+    }
+
+    @Test
+    @UseDataProvider("getExpensesProvider")
+    public void testGetExpenses(String message, int offset, int limit, int expectedId, int expectedNumRecords)
+    {
+        List<ExpenseRecordTax> expenses = Arrays.asList(_getExpenses(offset, limit).readEntity(ExpenseRecordTax[].class));
+        Assert.assertEquals(message, expectedNumRecords, expenses.size());
+        Assert.assertEquals(expectedId, expenses.get(0).getId());
+    }
+
     private static Response _saveExpense(String jsonString)
     {
         return CLIENT.target(RESOURCE_URI)
@@ -161,9 +189,11 @@ public class IntegrationTest
             .post(Entity.json(jsonString));
     }
 
-    private static Response _getExpenses()
+    private static Response _getExpenses(int offset, int limit)
     {
         return CLIENT.target(RESOURCE_URI)
+            .queryParam("offset", offset)
+            .queryParam("limit", limit)
             .request()
             .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
             .get();

@@ -53,8 +53,9 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
     }
 
     var loadExpenses = function() {
-        // Retrieve a list of expenses via REST
-        restExpenses.get()
+        // Retrieve a list of expenses via REST using hardcoded offset/limits
+        // TODO: Implement real pagination
+        restExpenses.get({ offset: 0, limit: 500})
             .then(function(response) {
                 $scope.errors = [];
                 $scope.expenses = response;

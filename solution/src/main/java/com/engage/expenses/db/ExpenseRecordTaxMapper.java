@@ -21,7 +21,8 @@ public class ExpenseRecordTaxMapper implements ResultSetMapper<ExpenseRecordTax>
                                 ResultSet rs,
                                 StatementContext context) throws SQLException
     {
-        return new ExpenseRecordTax(rs.getDate(ExpenseMapper.DATE).toLocalDate(),
+        return new ExpenseRecordTax(rs.getInt(ExpenseMapper.ID),
+                                    rs.getDate(ExpenseMapper.DATE).toLocalDate(),
                                     rs.getBigDecimal(ExpenseMapper.AMOUNT),
                                     rs.getBigDecimal(VAT),
                                     rs.getString(ExpenseMapper.REASON));

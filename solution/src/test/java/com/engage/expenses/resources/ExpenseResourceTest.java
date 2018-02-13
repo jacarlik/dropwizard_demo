@@ -44,8 +44,14 @@ public class ExpenseResourceTest
 {
     private static final ExpensesService EXPENSES_SERVICE = mock(ExpensesService.class);
     private final ExpenseRecord EXPENSE_RECORD = new ExpenseRecord(LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), "Test");
-    private final ExpenseRecordTax EXPENSE_RECORD_TAX = new ExpenseRecordTax(LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), new BigDecimal("1.7"), "Test");
+    private final ExpenseRecordTax EXPENSE_RECORD_TAX = new ExpenseRecordTax(1, LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), new BigDecimal("1.7"), "Test");
     private static final ObjectMapper MAPPER = CommonUtils.getObjectMapper();
+
+    // How many records to request from the service
+    private static final int OFFSET = 0;
+    private static final int LIMIT = 5;
+
+    // Credentials
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "admin";
     private static final String BASIC_AUTH_HEADER = "Basic YWRtaW46YWRtaW4=";
@@ -67,7 +73,7 @@ public class ExpenseResourceTest
     @Before
     public void setup()
     {
-        when(EXPENSES_SERVICE.getExpenses()).thenReturn(ImmutableList.of(EXPENSE_RECORD_TAX));
+        when(EXPENSES_SERVICE.getExpenses(OFFSET, LIMIT)).thenReturn(ImmutableList.of(EXPENSE_RECORD_TAX));
         when(EXPENSES_SERVICE.getExpense(1)).thenReturn(EXPENSE_RECORD_TAX);
         when(EXPENSES_SERVICE.saveExpense(EXPENSE_RECORD)).thenReturn(0);
         when(EXPENSES_SERVICE.deleteExpense(1)).thenReturn(1);
@@ -84,13 +90,15 @@ public class ExpenseResourceTest
     {
         List<ExpenseRecordTax> expenses = Arrays.asList(
             RESOURCES.target("/expenses")
+                .queryParam("offset", OFFSET)
+                .queryParam("limit", LIMIT)
                 .request()
                 .header(HttpHeaders.AUTHORIZATION, BASIC_AUTH_HEADER)
                 .get()
                 .readEntity(ExpenseRecordTax[].class)
         );
         Assert.assertEquals("Requested expense records correspond to the list retrieved from the resource", EXPENSE_RECORD_TAX, expenses.get(0));
-        verify(EXPENSES_SERVICE).getExpenses();
+        verify(EXPENSES_SERVICE).getExpenses(OFFSET, LIMIT);
     }
 
     @Test

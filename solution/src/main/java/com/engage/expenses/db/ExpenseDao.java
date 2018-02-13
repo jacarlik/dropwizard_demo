@@ -21,8 +21,9 @@ import java.util.List;
 @RegisterMapper({ExpenseMapper.class, ExpenseRecordTaxMapper.class})
 public interface ExpenseDao
 {
-    @SqlQuery("SELECT id, date, amount, ROUND(amount - (amount / 1.2), 2) AS vat, reason FROM t_expense;")
-    List<ExpenseRecordTax> getExpenses();
+    // These hardcoded conversions are used primarily for demo purposes; VAT rates should be persisted and associated with each expense record
+    @SqlQuery("SELECT id, date, amount, ROUND(amount - (amount / 1.2), 2) AS vat, reason FROM t_expense OFFSET :offset LIMIT :limit;")
+    List<ExpenseRecordTax> getExpenses(@Bind("offset") final int offset, @Bind("limit") final int limit);
 
     @SqlQuery("SELECT id, date, amount, ROUND(amount - (amount / 1.2), 2) AS vat, reason FROM t_expense WHERE id = :id;")
     ExpenseRecordTax getExpense(@Bind("id") final int id);
@@ -32,6 +33,7 @@ public interface ExpenseDao
     @GetGeneratedKeys
     int saveExpense(@BindBean final ExpenseRecord expense);
 
+    @Transaction
     @SqlUpdate("DELETE FROM t_expense WHERE id = :id")
     int deleteExpense(@Bind("id") final int id);
 }

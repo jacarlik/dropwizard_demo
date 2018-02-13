@@ -18,16 +18,21 @@ import java.util.List;
  */
 public abstract class ExpensesService
 {
+    // Maximum number of records to retrieve within a single page
+    private static final int RESULTSET_LIMIT = 1000;
+
+    // Errors
     private static final String DATABASE_ACCESS_ERROR = "Could not reach the database. The database may be down or there may be network connectivity issues. Details: ";
     private static final String DATABASE_CONNECTION_ERROR = "Could not create a connection to the database. The database configurations are likely incorrect. Details: ";
     private static final String UNEXPECTED_DATABASE_ERROR = "Unexpected error occurred while attempting to reach the database. Details: ";
+    private static final String RESULTSET_SIZE_EXCEEDED = String.format("Maximum result-set size has been exceeded, please request less than %d records", RESULTSET_LIMIT);
 
     @CreateSqlObject
     abstract ExpenseDao expenseDao();
 
-    public List<ExpenseRecordTax> getExpenses()
+    public List<ExpenseRecordTax> getExpenses(int offset, int limit)
     {
-        return expenseDao().getExpenses();
+        return expenseDao().getExpenses(offset, limit);
     }
 
     public ExpenseRecordTax getExpense(int id)
@@ -75,7 +80,7 @@ public abstract class ExpensesService
     {
         try
         {
-            expenseDao().getExpenses();
+            expenseDao().getExpenses(0, 10);
         }
         catch (UnableToObtainConnectionException e)
         {

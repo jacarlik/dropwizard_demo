@@ -15,6 +15,7 @@ import java.sql.SQLException;
  */
 public class ExpenseMapper implements ResultSetMapper<ExpenseRecord>
 {
+    static final String ID = "id";
     static final String DATE = "date";
     static final String AMOUNT = "amount";
     static final String REASON = "reason";

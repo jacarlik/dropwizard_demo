@@ -25,7 +25,7 @@ public class ExpenseTest
     );
 
     private static final ExpenseRecordTax EXPENSE_RECORD_TAX = new ExpenseRecordTax(
-        LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), new BigDecimal("1.7"), "Test"
+        1, LocalDate.parse("2018-02-10"), new BigDecimal("10.2"), new BigDecimal("1.7"), "Test"
     );
 
     @BeforeClass

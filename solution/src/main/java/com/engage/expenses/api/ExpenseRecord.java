@@ -49,6 +49,14 @@ public class ExpenseRecord
         m_reason = reason;
     }
 
+    public ExpenseRecord(int id, LocalDate date, BigDecimal amount, String reason)
+    {
+        m_id = id;
+        m_date = date;
+        m_amount = amount;
+        m_reason = reason;
+    }
+
     public int getId()
     {
         return m_id;
