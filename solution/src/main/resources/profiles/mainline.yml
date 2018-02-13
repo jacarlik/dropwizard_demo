@@ -9,7 +9,7 @@ server:
   applicationConnectors:
   - type: https
     port: 8443
-    keyStorePath: src/main/resources/expenses.keystore
+    keyStorePath: src/main/resources/auth/expenses.keystore
     keyStorePassword: engage
     validateCerts: false
   adminConnectors:

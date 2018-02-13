@@ -185,6 +185,39 @@ public class IntegrationTest
         Assert.assertEquals(expectedId, expenses.get(0).getId());
     }
 
+    @DataProvider
+    public static Object[][] getExpensesQueryParamsProvider()
+    {
+        return new Object[][]
+            {
+                {
+                    "Expecting HTTP 400 status code with offset of 0 and limit of 0", 0, 0, HttpStatus.SC_BAD_REQUEST
+                },
+                {
+                    "Expecting HTTP 400 status code with offset of -1 and limit of 0", -1, 0, HttpStatus.SC_BAD_REQUEST
+                },
+                {
+                    "Expecting HTTP 400 status code with offset of 0 and limit of -1", 0, -1, HttpStatus.SC_BAD_REQUEST
+                },
+                {
+                    "Expecting HTTP 400 status code with offset of 0 and limit of 100000", 0, 100000, HttpStatus.SC_BAD_REQUEST
+                },
+                {
+                    "Expecting HTTP 200 status code with offset of 0 and limit of 1", 0, 1, HttpStatus.SC_OK
+                },
+                {
+                    "Expecting HTTP 200 status code with offset of 0 and limit of 1", 10, 100, HttpStatus.SC_OK
+                },
+            };
+    }
+
+    @Test
+    @UseDataProvider("getExpensesQueryParamsProvider")
+    public void testGetExpensesQueryParams(String message, int offset, int limit, int expectedStatusCode)
+    {
+        Assert.assertEquals(message, expectedStatusCode, _getExpenses(offset, limit).getStatus());
+    }
+
     private static Response _saveExpense(String jsonString)
     {
         return CLIENT.target(RESOURCE_URI)

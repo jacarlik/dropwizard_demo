@@ -32,6 +32,8 @@ import java.util.List;
  * 3.) INTERNAL_SERVER_ERROR (500) - Indicates a failure such as DB not being accessible
  *
  * TODO: Consider using cache (i.e. Guava's LoadingCache) in this resource?
+ * TODO: Improve field checks with custom hibernate validators
+ * TODO: Add swagger UI (https://github.com/smoketurner/dropwizard-swagger)
  *
  * @author N/A
  * @since 2018-02-09
@@ -55,12 +57,12 @@ public class ExpenseResource
      * @param limit How many records to retrieve starting from the "offset"
      * @return A list of expenses or an empty list if none are found
      */
-    @RolesAllowed({ "ADMIN" })
     @GET
     @Timed
+    @RolesAllowed({ "ADMIN" })
     public Response getExpenses(@Auth User user,
-                                @QueryParam("offset") @Range(min = 0, message = "Offset has to be greater or equal to 0") int offset,
-                                @QueryParam("limit") @Range(min = 0, max = 1000, message = "Maximum number of records is limited to range [1, 1000]") int limit)
+                                @QueryParam("offset") @Range(min = 0, message = "should be greater or equal to 0") int offset,
+                                @QueryParam("limit") @Range(min = 1, max = 1000, message = "should be within range [1, 1000]") int limit)
     {
         List<ExpenseRecordTax> expenses = m_expensesService.getExpenses(offset, limit);
         if (expenses.isEmpty())
@@ -77,10 +79,10 @@ public class ExpenseResource
      * @param id Expense ID
      * @return Expense tax record or an empty response if the matching record hasn't been found
      */
-    @RolesAllowed({ "ADMIN" })
     @GET
     @Timed
     @Path("{id}")
+    @RolesAllowed({ "ADMIN" })
     public Response getExpense(@Auth User user,
                                @PathParam("id") final int id)
     {
@@ -94,9 +96,9 @@ public class ExpenseResource
      * @param expense Expense record
      * @return Expense ID for the newly created record
      */
-    @RolesAllowed({ "ADMIN" })
     @POST
     @Timed
+    @RolesAllowed({ "ADMIN" })
     public Response saveExpense(@Auth User user,
                                 @NotNull @Valid final ExpenseRecord expense)
     {
@@ -110,10 +112,10 @@ public class ExpenseResource
      * @param id Expense record ID
      * @return Status 1 in case of success, otherwise 0
      */
-    @RolesAllowed({ "ADMIN" })
     @DELETE
     @Timed
     @Path("{id}")
+    @RolesAllowed({ "ADMIN" })
     public Response deleteExpense(@Auth User user,
                                   @PathParam("id") final int id)
     {

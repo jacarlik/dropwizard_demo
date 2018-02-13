@@ -25,18 +25,18 @@ public class ExpenseRecord
     private int m_id;
 
     @JsonProperty("date")
-    @NotNull(message = "Date should not be null")
+    @NotNull(message = "should not be null")
     private LocalDate m_date;
 
     @JsonProperty("amount")
-    @NotNull(message = "Amount should not be null")
-    @Range(min = 1, max = 1000000, message = "Amount should be in range [1, 1000000]")
-    @Digits(integer = 1000000, fraction = 2, message = "Amount should contain not more than 2 decimal places")
+    @NotNull(message = "should not be null")
+    @Range(min = 1, max = 1000000, message = "should be within range [1, 1000000]")
+    @Digits(integer = 1000000, fraction = 2, message = "should contain not more than 2 decimal places")
     private BigDecimal m_amount;
 
     @JsonProperty("reason")
-    @NotBlank(message = "Reason should not be empty or null")
-    @Length(max = 800, message = "Maximum reason length is limited to 800 characters")
+    @NotBlank(message = "should not be empty or null")
+    @Length(max = 800, message = "should not contain more than 800 characters")
     private String m_reason;
 
     ExpenseRecord() {
