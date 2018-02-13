@@ -161,13 +161,13 @@ public class IntegrationTest
         return new Object[][]
             {
                 {
-                    "With offset 0 and limit 2, 2 records should be retrieved starting from ID 1 to 2", 0, 2, 1, 2
+                    "With offset 0 and limit 2, 2 records should be retrieved starting from ID 1 to ID 2", 0, 2, 1, 2
                 },
                 {
-                    "With offset 1 and limit 3, 2 records should be retrieved starting from ID 2 to 3", 1, 3, 2, 2
+                    "With offset 1 and limit 2, 2 records should be retrieved starting from ID 2 to ID 3", 1, 2, 2, 2
                 },
                 {
-                    "With offset 0 and limit 3, 3 records should be retrieved starting from ID 1 to 3", 0, 3, 1, 3
+                    "With offset 0 and limit 3, 3 records should be retrieved starting from ID 1 to ID 3", 0, 3, 1, 3
                 }
             };
     }
