@@ -27,7 +27,7 @@ To the get correct IP address, required to access the DB, run `docker-machine ip
 ### Backend
 
 1. Go to the directory of your choice and execute `git clone https://github.com/jacarlik/dropwizard_demo.git && cd dropwizard_demo/solution`.
-2. If you're using docker-machine (mentioned in the step 2),  you need to update the `uri` property with the correct IP address (instead of `localhost`) in `src/main/resources/profiles/mainline.yml`.
+2. If you're using docker-machine (mentioned in the step 2), you need to update the `uri` property with the correct IP address (instead of `localhost`) in `src/main/resources/profiles/mainline.yml`.
 3. Run `mvn clean package -U` to build the application
 4. Start the application with `java -jar target/expenses-1.0-SNAPSHOT.jar server src/main/resources/profiles/mainline.yml`
 5. To check that the application is running enter URL `curl 'http://localhost:10001/healthcheck'`
