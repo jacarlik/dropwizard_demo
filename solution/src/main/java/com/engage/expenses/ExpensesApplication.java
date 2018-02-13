@@ -70,6 +70,35 @@ public class ExpensesApplication extends Application<ExpensesConfiguration>
     @Override
     public void run(final ExpensesConfiguration configuration, final Environment environment)
     {
+        LOGGER.info("Enabling CORS...");
+        _enableCORS(environment);
+
+        LOGGER.info("Registering custom modules...");
+        _registerAdditionalModules(configuration, environment);
+
+        LOGGER.info("Setting up basic authentication...");
+        _setUpSecurity(configuration, environment);
+
+        LOGGER.info("Retrieving the data source...");
+        DataSource dataSource = configuration.getDataSourceFactory().build(environment.metrics(), DATABASE);
+        DBI dbi = new DBI(dataSource);
+
+        LOGGER.info("Initiating flyway migrations...");
+        _initiateFlywayMigrations(dataSource);
+
+        LOGGER.info("Registering health checks...");
+        environment.healthChecks().register(EXPENSES_APPLICATION, new ExpenseResourceHealthCheck(dbi.onDemand(ExpensesService.class)));
+
+        // Register resource(s)
+        LOGGER.info("Registering resources...");
+        environment.jersey().register(new ExpenseResource(dbi.onDemand(ExpensesService.class)));
+    }
+
+    /**
+     * Enable cross-origin resource sharing
+     */
+    private static void _enableCORS(final Environment environment)
+    {
         // Enable CORS headers
         final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
 
@@ -81,40 +110,44 @@ public class ExpensesApplication extends Application<ExpensesConfiguration>
         // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
-        // Do not pass a preflight request to down-stream auth filters; unauthenticated preflight requests should be permitted by spec
+        // Do not pass a pre-flight request to down-stream auth filters; unauthenticated preflight requests should be permitted by spec
         cors.setInitParameter(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM, Boolean.FALSE.toString());
+    }
 
-        // Set up date format for (de)serialization
+    /**
+     * Register custom modules
+     */
+    private static void _registerAdditionalModules(final ExpensesConfiguration configuration,
+                                                   final Environment environment)
+    {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(configuration.getDateFormat());
         environment.getObjectMapper()
             .registerModule(new SimpleModule().addDeserializer(LocalDate.class, new LocalDateDeserializer(dateTimeFormatter)))
             .registerModule(new SimpleModule().addSerializer(LocalDate.class, new LocalDateSerializer(dateTimeFormatter)));
+    }
 
-        // Retrieve datasource from the configuration file
-        DataSource dataSource = configuration.getDataSourceFactory().build(environment.metrics(), DATABASE);
-        DBI dbi = new DBI(dataSource);
-
-        // Setting up security
+    /**
+     * Set up security-related config
+     */
+    private static void _setUpSecurity(final ExpensesConfiguration configuration,
+                                       final Environment environment)
+    {
         environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
-                                                       .setAuthenticator(new BasicAuthenticator(configuration.getUserName(), configuration.getPassword()))
-                                                       .setAuthorizer(new BasicAuthorizer())
-                                                       .setRealm("BASIC-AUTH-REALM")
-                                                       .buildAuthFilter()));
+                                                                 .setAuthenticator(new BasicAuthenticator(configuration.getUserName(), configuration.getPassword()))
+                                                                 .setAuthorizer(new BasicAuthorizer())
+                                                                 .setRealm("BASIC-AUTH-REALM")
+                                                                 .buildAuthFilter()));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
+    }
 
-        // Initiate flyway migrations
-        LOGGER.info("Initiating flyway migrations...");
+    /**
+     * Initiate flyway migrations
+     */
+    private static void _initiateFlywayMigrations(final DataSource dataSource)
+    {
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
         flyway.migrate();
-
-        // Register health check(s)
-        LOGGER.info("Registering health checks...");
-        environment.healthChecks().register(EXPENSES_APPLICATION, new ExpenseResourceHealthCheck(dbi.onDemand(ExpensesService.class)));
-
-        // Register resource(s)
-        LOGGER.info("Registering resources...");
-        environment.jersey().register(new ExpenseResource(dbi.onDemand(ExpensesService.class)));
     }
 }

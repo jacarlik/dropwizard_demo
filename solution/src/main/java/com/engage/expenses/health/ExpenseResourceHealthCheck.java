@@ -4,7 +4,7 @@ import com.codahale.metrics.health.HealthCheck;
 import com.engage.expenses.core.ExpensesService;
 
 /**
- * Health checks for the expenses application
+ * Basic endpoint health check
  *
  * @author N/A
  * @since 2018-02-09

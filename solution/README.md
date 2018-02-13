@@ -1,17 +1,28 @@
+# DropWizard Expenses Application
+
+Introduction
+---
+
+The purpose of this application is to demonstrate the usage of the DropWizard API in conjunction with dockerized 
+PostgreSQL DB and AngularJS frontend.
+
 How to run
 ---
 
-This application was developed and tested on OSX Sierra and CentOS 7.4.1708. 
+This application was developed and tested on OSX Sierra and CentOS 7.4.1708.
 
 ### Prerequisites
 1. [Node package manager](https://docs.npmjs.com/getting-started/installing-node)
 2. [Docker](https://docs.docker.com/install/)
 3. [Maven 3.x](https://maven.apache.org/install.html)
+4. [Java 8](https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html)
 
 ### Setting up the development database
 
 1. Run the DB container by executing  `docker run -d -p 32768:5432 -P --name engage jacarlik/postgres_service:latest`
-2. Check if the database is accessible by running `psql -h localhost -p 32768 -d expenses -U engage -c 'SELECT 1;'`. The password should be same as the username. If you can't access the DB, you might have docker-machine installed. To the get correct IP address, required to access the DB, run `docker-machine ip default`.
+2. Check if the database is accessible by running `psql -h localhost -p 32768 -d expenses -U engage -c 'SELECT 1;'`. 
+The password should be same as the username. If you can't access the DB, you might have docker-machine installed.
+To the get correct IP address, required to access the DB, run `docker-machine ip default`.
  
 ### Backend
 
@@ -34,7 +45,7 @@ The following cURL commands can be used to interact with the endpoint:
       "deadlocks": {
         "healthy": true
       }
-    }	 
+    }
   
 #### Get all expenses
 

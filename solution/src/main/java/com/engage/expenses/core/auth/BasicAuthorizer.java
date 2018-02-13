@@ -1,7 +1,13 @@
 package com.engage.expenses.core.auth;
  
 import io.dropwizard.auth.Authorizer;
- 
+
+/**
+ * Basic authorizer
+ *
+ * @author N/A
+ * @since 2018-02-10
+ */
 public class BasicAuthorizer implements Authorizer<User>
 {
     @Override

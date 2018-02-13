@@ -13,7 +13,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 import java.util.List;
 
 /**
- * A DAO class containing expense-related queries
+ * Data access class containing expense-related queries
  *
  * @author N/A
  * @since 2018-02-10
@@ -21,7 +21,7 @@ import java.util.List;
 @RegisterMapper({ExpenseMapper.class, ExpenseRecordTaxMapper.class})
 public interface ExpenseDao
 {
-    // These hardcoded conversions are used primarily for demo purposes; VAT rates should be persisted and associated with each expense record
+    // TODO: These hardcoded conversions are used primarily for demo purposes; VAT rates should be persisted and associated with each expense record (due to being susceptible to change)
     @SqlQuery("SELECT id, date, amount, ROUND(amount - (amount / 1.2), 2) AS vat, reason FROM t_expense OFFSET :offset LIMIT :limit;")
     List<ExpenseRecordTax> getExpenses(@Bind("offset") final int offset, @Bind("limit") final int limit);
 

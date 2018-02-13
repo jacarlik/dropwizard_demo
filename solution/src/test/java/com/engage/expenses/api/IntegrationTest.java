@@ -96,12 +96,12 @@ public class IntegrationTest
                 HttpStatus.SC_BAD_REQUEST
             },
             {
-                "Null reason should result in HTTP 400 status code",
+                "Missing reason should result in HTTP 400 status code",
                 "{\"date\":\"01/01/18\", \"amount\":10, \"reason\":}",
                 HttpStatus.SC_BAD_REQUEST
             },
             {
-                "Null amount should result in HTTP 400 status code",
+                "Missing amount should result in HTTP 400 status code",
                 "{\"date\":\"01/01/18\", \"amount\":, \"reason\":\"Test\"}",
                 HttpStatus.SC_BAD_REQUEST
             },

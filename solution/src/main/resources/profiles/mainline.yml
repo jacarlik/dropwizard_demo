@@ -4,6 +4,7 @@ logging:
   loggers:
     com.engage.expenses: DEBUG
 
+# TODO: Configure endpoint to use SSL
 server:
   rootPath: /app/*
   applicationConnectors:
@@ -13,6 +14,7 @@ server:
   - type: http
     port: 10001
 
+# Note: If you're using docker-machine, run "docker-machine ip default" to get the actual IP address required to access the DB
 database:
   driverClass: org.postgresql.Driver
   user: engage
@@ -30,6 +32,6 @@ database:
 # Date format used by both API and the frontend
 dateFormat: dd/MM/yy
 
-# Credentials for basic authentication (ideally, this should live within a DB)
+# Credentials for basic authentication (TODO: Persist in the DB)
 username: admin
 password: admin

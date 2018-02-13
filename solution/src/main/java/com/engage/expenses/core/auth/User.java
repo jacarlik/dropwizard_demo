@@ -6,7 +6,7 @@ import java.security.Principal;
 import java.util.Set;
 
 /**
- * User representation
+ * User representation used for basic authentication/authorization purposes
  *
  * @author N/A
  * @since 2018-02-11

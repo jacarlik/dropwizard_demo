@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Simple JDBI mapper used to wire result-set entries to new ExpenseRecord instance
+ * Simple JDBI mapper used to wire result-set entries to ExpenseRecord instance
  *
  * @author N/A
  * @since 2018-02-10
