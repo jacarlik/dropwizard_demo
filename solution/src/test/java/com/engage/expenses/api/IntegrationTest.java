@@ -160,32 +160,6 @@ public class IntegrationTest
     }
 
     @DataProvider
-    public static Object[][] getExpensesProvider()
-    {
-        return new Object[][]
-            {
-                {
-                    "With offset 0 and limit 2, 2 records should be retrieved starting from ID 1 to ID 2", 0, 2, 1, 2
-                },
-                {
-                    "With offset 1 and limit 2, 2 records should be retrieved starting from ID 2 to ID 3", 1, 2, 2, 2
-                },
-                {
-                    "With offset 0 and limit 3, 3 records should be retrieved starting from ID 1 to ID 3", 0, 3, 1, 3
-                }
-            };
-    }
-
-    @Test
-    @UseDataProvider("getExpensesProvider")
-    public void testGetExpenses(String message, int offset, int limit, int expectedId, int expectedNumRecords)
-    {
-        List<ExpenseRecordTax> expenses = Arrays.asList(_getExpenses(offset, limit).readEntity(ExpenseRecordTax[].class));
-        Assert.assertEquals(message, expectedNumRecords, expenses.size());
-        Assert.assertEquals(expectedId, expenses.get(0).getId());
-    }
-
-    @DataProvider
     public static Object[][] getExpensesQueryParamsProvider()
     {
         return new Object[][]

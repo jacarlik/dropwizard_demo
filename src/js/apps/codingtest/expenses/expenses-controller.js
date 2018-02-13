@@ -32,10 +32,6 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
         switch(statusCode) {
             // Validation errors
             case 422:
-                response.errors.forEach(
-                    function(part, index, arr) {
-                        arr[index] = part.substr(part.indexOf(" ") + 1);
-                    });
                 $scope.errors = response.errors;
                 break;
             // Everything else (JSON parse exceptions, unrecoverable errors such as DB being inaccessible, etc.)
