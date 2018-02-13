@@ -4,12 +4,14 @@ logging:
   loggers:
     com.engage.expenses: DEBUG
 
-# TODO: Configure endpoint to use SSL
 server:
   rootPath: /app/*
   applicationConnectors:
-  - type: http
-    port: 10000
+  - type: https
+    port: 8443
+    keyStorePath: src/main/resources/expenses.keystore
+    keyStorePassword: engage
+    validateCerts: false
   adminConnectors:
   - type: http
     port: 10001
@@ -28,6 +30,11 @@ database:
   checkConnectionWhileIdle: false
   evictionInterval: 10s
   minIdleTime: 1 minute
+
+jerseyClient:
+  tls:
+    verifyHostname: false
+    trustSelfSignedCertificates: true
 
 # Date format used by both API and the frontend
 dateFormat: dd/MM/yy

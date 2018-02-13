@@ -2,6 +2,7 @@ package com.engage.expenses;
 
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.dropwizard.client.JerseyClientConfiguration;
 import io.dropwizard.db.DataSourceFactory;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -16,6 +17,11 @@ import javax.validation.constraints.NotNull;
  */
 public class ExpensesConfiguration extends Configuration
 {
+    @JsonProperty("jerseyClient")
+    @Valid
+    @NotNull
+    private JerseyClientConfiguration m_jerseyClient = new JerseyClientConfiguration();
+
     @JsonProperty("database")
     @Valid
     @NotNull
@@ -32,6 +38,16 @@ public class ExpensesConfiguration extends Configuration
     @JsonProperty("password")
     @NotBlank
     private String m_password;
+
+    public JerseyClientConfiguration getJerseyClientConfiguration()
+    {
+        return m_jerseyClient;
+    }
+
+    public void setJerseyClientConfiguration(JerseyClientConfiguration jerseyClient)
+    {
+        m_jerseyClient = jerseyClient;
+    }
 
     public DataSourceFactory getDataSourceFactory()
     {

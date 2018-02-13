@@ -46,8 +46,12 @@ public class IntegrationTest
     @BeforeClass
     public static void setUp()
     {
-        CLIENT = new JerseyClientBuilder(RULE.getEnvironment()).using(MAPPER).build("Test client");
-        RESOURCE_URI = String.format("http://localhost:%d/app/expenses", RULE.getLocalPort());
+        CLIENT = new JerseyClientBuilder(RULE.getEnvironment())
+            .using(RULE.getConfiguration().getJerseyClientConfiguration())
+            .using(MAPPER)
+            .build("Test client");
+
+        RESOURCE_URI = String.format("https://localhost:%d/app/expenses", RULE.getLocalPort());
     }
 
     @DataProvider
