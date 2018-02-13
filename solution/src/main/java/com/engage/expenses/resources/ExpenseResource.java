@@ -29,7 +29,7 @@ import java.util.List;
  * 2.) UNPROCESSABLE_ENTITY (422)  - Validation failures (contains explanation in the payload)
  * 3.) INTERNAL_SERVER_ERROR (500) - Indicates a failure such as DB not being accessible
  *
- * @author jklarica
+ * @author
  * @since 2018-02-09
  */
 @Path("expenses")

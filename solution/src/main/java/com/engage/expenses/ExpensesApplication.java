@@ -34,7 +34,7 @@ import java.util.EnumSet;
 /**
  * Expenses application main class
  *
- * @author jklarica
+ * @author
  * @since 2018-02-09
  */
 public class ExpensesApplication extends Application<ExpensesConfiguration>

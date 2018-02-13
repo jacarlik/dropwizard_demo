@@ -10,12 +10,12 @@ This application was developed and tested on OSX Sierra and CentOS 7.4.1708.
 
 ### Setting up the development database
 
-1. Run the DB container by executing  `docker run -d -p 32768:5432 -P --name engage jklarica/postgres_service:version1.0`
+1. Run the DB container by executing  `docker run -d -p 32768:5432 -P --name engage jacarlik/postgres_service:latest`
 2. Check if the database is accessible by running `psql -h localhost -p 32768 -d expenses -U engage -c 'SELECT 1;'`. The password should be same as the username. If you can't access the DB, you might have docker-machine installed. To the get correct IP address, required to access the DB, run `docker-machine ip default`.
  
 ### Backend
 
-1. Go to the directory of your choice and execute `git clone https://github.com/jklarica/dropwizard_demo.git && cd dropwizard_demo/solution`.
+1. Go to the directory of your choice and execute `git clone https://github.com/jacarlik/dropwizard_demo.git && cd dropwizard_demo/solution`.
 2. If you're using docker-machine (mentioned in the step 2),  you need to update the `uri` property with the correct IP address (instead of `localhost`) in `src/main/resources/profiles/mainline.yml`.
 3. Run `mvn clean package -U` to build the application
 4. Start the application with `java -jar target/expenses-1.0-SNAPSHOT.jar server src/main/resources/profiles/mainline.yml`

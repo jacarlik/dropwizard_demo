@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * A DAO class containing expense-related queries
  *
- * @author jklarica
+ * @author
  * @since 2018-02-10
  */
 @RegisterMapper({ExpenseMapper.class, ExpenseRecordTaxMapper.class})

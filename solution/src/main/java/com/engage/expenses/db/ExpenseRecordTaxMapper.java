@@ -10,7 +10,7 @@ import java.sql.SQLException;
 /**
  * Simple JDBI mapper used to wire result-set entries to new ExpenseRecordTax instance
  *
- * @author jklarica
+ * @author
  * @since 2018-02-10
  */
 public class ExpenseRecordTaxMapper implements ResultSetMapper<ExpenseRecordTax>

@@ -15,7 +15,7 @@ import jdk.nashorn.internal.ir.annotations.Immutable;
 /**
  * Basic authenticator
  *
- * @author jklarica
+ * @author
  * @since 2018-02-10
  */
 @Immutable

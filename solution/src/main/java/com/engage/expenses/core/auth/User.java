@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * User representation
  *
- * @author jklarica
+ * @author
  * @since 2018-02-11
  */
 @Immutable

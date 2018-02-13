@@ -14,7 +14,7 @@ import java.time.LocalDate;
 /**
  * Expenses service (de)serialization tests
  *
- * @author jklarica
+ * @author
  * @since 2018-02-10
  */
 public class ExpenseTest
