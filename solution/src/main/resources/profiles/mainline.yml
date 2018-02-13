@@ -39,6 +39,6 @@ jerseyClient:
 # Date format used by both API and the frontend
 dateFormat: dd/MM/yy
 
-# Credentials for basic authentication (TODO: Persist in the DB)
+# TODO: Users should be persisted in a DB (or just use OAuth2)
 username: admin
 password: admin

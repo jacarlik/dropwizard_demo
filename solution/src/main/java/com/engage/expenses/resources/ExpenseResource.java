@@ -31,7 +31,7 @@ import java.util.List;
  * 2.) UNPROCESSABLE_ENTITY (422)  - Validation failures (contains explanation in the payload)
  * 3.) INTERNAL_SERVER_ERROR (500) - Indicates a failure such as DB not being accessible
  *
- * TODO: Consider using cache (i.e. Guava's LoadingCache) for this resource, especially when calling getExpenses()
+ * TODO: Consider using cache (i.e. Guava's LoadingCache) in this resource?
  *
  * @author N/A
  * @since 2018-02-09
