@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * A class representing a single expense record
  *
- * @author
+ * @author N/A
  * @since 2018-02-10
  */
 @JsonPropertyOrder({ "id", "date", "amount", "reason" })

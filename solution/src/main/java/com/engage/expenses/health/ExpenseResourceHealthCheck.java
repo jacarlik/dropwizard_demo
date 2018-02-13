@@ -6,7 +6,7 @@ import com.engage.expenses.core.ExpensesService;
 /**
  * Health checks for the expenses application
  *
- * @author
+ * @author N/A
  * @since 2018-02-09
  */
 public class ExpenseResourceHealthCheck extends HealthCheck

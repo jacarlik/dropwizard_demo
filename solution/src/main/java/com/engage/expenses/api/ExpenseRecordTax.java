@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * A class which represents expense-related taxes
  *
- * @author
+ * @author N/A
  * @since 2018-02-10
  */
 @JsonIgnoreProperties({ "id" })

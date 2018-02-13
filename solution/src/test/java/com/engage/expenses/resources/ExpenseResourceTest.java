@@ -37,7 +37,7 @@ import static org.mockito.Mockito.verify;
 /**
  * Expenses service resource tests
  *
- * @author
+ * @author N/A
  * @since 2018-02-10
  */
 public class ExpenseResourceTest

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Expense service layer acting as a link between resource and DAO layers
  *
- * @author
+ * @author N/A
  * @since 2018-02-10
  */
 public abstract class ExpensesService

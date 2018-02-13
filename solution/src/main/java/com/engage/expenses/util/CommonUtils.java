@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * General utils class
  *
- * @author
+ * @author N/A
  * @since 2018-02-10
  */
 public class CommonUtils

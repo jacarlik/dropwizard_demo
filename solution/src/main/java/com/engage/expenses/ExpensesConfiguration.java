@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 /**
  * Expenses application configuration class
  *
- * @author
+ * @author N/A
  * @since 2018-02-09
  */
 public class ExpensesConfiguration extends Configuration

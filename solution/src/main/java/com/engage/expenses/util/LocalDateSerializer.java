@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Custom date serializer
  *
- * @author
+ * @author N/A
  * @since 2018-02-10
  */
 public class LocalDateSerializer extends StdSerializer<LocalDate>

@@ -26,7 +26,7 @@ import java.math.BigDecimal;
 /**
  * Expenses application integration tests
  *
- * @author
+ * @author N/A
  * @since 2018-02-10
  */
 @RunWith(DataProviderRunner.class)
