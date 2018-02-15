@@ -2,7 +2,7 @@
 logging:
   level: DEBUG
   loggers:
-    com.engage.expenses: DEBUG
+    com.engagetech.expenses: DEBUG
 
 server:
   rootPath: /app/*
@@ -21,7 +21,7 @@ database:
   driverClass: org.postgresql.Driver
   user: engage
   password: engage
-  url: jdbc:postgresql://localhost:32768/expenses
+  url: jdbc:postgresql://192.168.99.100:32768/expenses
   maxWaitForConnection: 1s
   validationQuery: "SELECT 1"
   validationQueryTimeout: 3s
@@ -32,6 +32,7 @@ database:
   minIdleTime: 1 minute
 
 jerseyClient:
+  timeout: 2000ms
   tls:
     verifyHostname: false
     trustSelfSignedCertificates: true
