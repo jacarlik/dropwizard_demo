@@ -32,7 +32,7 @@ database:
   minIdleTime: 1 minute
 
 jerseyClient:
-  timeout: 2000ms
+  timeout: 5000ms
   tls:
     verifyHostname: false
     trustSelfSignedCertificates: true

@@ -6,6 +6,5 @@ var gulpEnvConfig = { /*{{gulp-env-config}}*/ };
 app.constant("config", {
 	apiroot: gulpEnvConfig.apiroot,
 	staticRoot: gulpEnvConfig.staticRoot,
-    requestHeaders: gulpEnvConfig.requestHeaders,
-    forexApi: gulpEnvConfig.forexApi
+    requestHeaders: gulpEnvConfig.requestHeaders
 });

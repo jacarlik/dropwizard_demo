@@ -19,8 +19,5 @@ module.exports = {
     staticRoot: "/",
 
     // At the moment, we're adding only basic authentication for the expenses API (ideally, it should originate from the login page)
-    requestHeaders: {"Authorization": "Basic YWRtaW46YWRtaW4="},
-
-    // API for current foreign exchange (forex) rates published by the European Central Bank
-    forexApi: "https://api.fixer.io/"
+    requestHeaders: {"Authorization": "Basic YWRtaW46YWRtaW4="}
 };

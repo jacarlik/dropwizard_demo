@@ -16,9 +16,8 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
     // Update the tab sections
     $rootScope.selectTabSection("expenses", 0);
 
-    const amountPattern = /^(\d+(\.\d+)?)\s?(EUR)$/i;
+    const amountPattern = /^(\d+(\.\d+)?)\s*?([A-z]{3})$/i;
     var restExpenses = $restalchemy.init({ root: $config.apiroot, headers: $config.requestHeaders }).at("expenses");
-    var forexApi = $restalchemy.init({ root: $config.forexApi }).at("latest");
 
     $scope.dateOptions = {
         changeMonth: true,
@@ -32,7 +31,7 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
         switch(statusCode) {
             // Validation errors
             case 422:
-                $scope.errors = response.errors;
+                $scope.errors = response.errors || [response.message];
                 break;
             // Everything else (JSON parse exceptions, unrecoverable errors such as DB being inaccessible, etc.)
             default:
@@ -42,11 +41,7 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
                     "customer care agent if the problem still persists."
                 ];
         }
-    }
-
-    var handleGetCurrencyRateError = function(response, statusCode) {
-        $scope.errors = ["Unable to retrieve currency rates for the API"];
-    }
+    };
 
     var loadExpenses = function() {
         // Retrieve a list of expenses via REST using hardcoded offset/limits
@@ -57,23 +52,19 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
                 $scope.expenses = response;
             })
             .error(handleSaveExpenseError.bind(this));
-    }
+    };
 
     var calculateVat = function(amount) {
         return parseFloat(amount - (amount / 1.2)).toFixed(2);
-    }
+    };
 
     $scope.extractVat = function () {
-        var match = $scope.newExpense.amount.match(amountPattern);
-        if (match != null) {
-            // Amount was specified in EURs, proceed with conversion
-            forexApi.get({base: "EUR", symbols: "GBP"}).then(function (response) {
-                $scope.newExpense.vat = calculateVat(match[1] * response.rates.GBP);
-            });
-
-        } else {
-            // Extract VAT from the total amount
-            $scope.newExpense.vat = calculateVat($scope.newExpense.amount);
+        if ($scope.newExpense.amount) {
+            var match = $scope.newExpense.amount.match(amountPattern);
+            if (match == null) {
+                // Extract VAT from the total amount
+                $scope.newExpense.vat = calculateVat($scope.newExpense.amount);
+            }
         }
     };
 
@@ -86,27 +77,17 @@ app.controller("ctrlExpenses", ["$rootScope", "$scope", "config", "restalchemy",
                 reason: $scope.newExpense.reason
             };
             var match = request.amount.match(amountPattern);
-            // Amount was specified in EURs, proceed with conversion
+            // Amount was specified in a different currency
             if (match != null) {
-                forexApi.get({base: "EUR", symbols: "GBP"})
-                    .then(function(response) {
-                        request.amount = parseFloat(match[1] * response.rates.GBP).toFixed(2);
-                        // Post the new expense
-                        restExpenses.post(request)
-                            .then(function () {
-                                loadExpenses();
-                            })
-                            .error(handleSaveExpenseError.bind(this));
-                    })
-                    .error(handleGetCurrencyRateError.bind(this))
-            } else {
-                // Post the new expense
-                restExpenses.post(request)
-                    .then(function () {
-                        loadExpenses();
-                    })
-                    .error(handleSaveExpenseError.bind(this));
+                request['currency'] = match[3];
+                request['amount'] = match[1];
             }
+            // Post the new expense
+            restExpenses.post(request)
+                .then(function () {
+                    loadExpenses();
+                })
+                .error(handleSaveExpenseError.bind(this));
         }
     };
 
