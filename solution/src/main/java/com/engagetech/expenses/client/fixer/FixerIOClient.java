@@ -37,17 +37,26 @@ public class FixerIOClient
                                       String targetCurrency,
                                       BigDecimal originalAmount)
     {
+        String baseCurrencyUppercase = baseCurrency.toUpperCase();
+        String targetCurrencyUppercase = targetCurrency.toUpperCase();
+
+        // Return the base value since no conversion is required
+        if (baseCurrencyUppercase.equals(targetCurrencyUppercase))
+        {
+            return originalAmount;
+        }
+
         FixerIOExchangeRates rates = new JerseyClientBuilder()
             .build()
             .target(BASE_URL)
             .path(date.format(FIXER_DATE_FORMATTER))
-            .queryParam("base", baseCurrency)
+            .queryParam("base", baseCurrencyUppercase)
             .request(MediaType.APPLICATION_JSON)
             .get()
             .readEntity(FixerIOExchangeRates.class);
 
         return originalAmount
-            .multiply(rates.getRates().get(targetCurrency))
+            .multiply(rates.getRates().get(targetCurrencyUppercase))
             .setScale(SCALE, RoundingMode.HALF_UP);
     }
 }
