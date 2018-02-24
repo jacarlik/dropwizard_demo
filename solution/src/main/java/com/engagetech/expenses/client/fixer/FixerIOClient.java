@@ -1,6 +1,5 @@
 package com.engagetech.expenses.client.fixer;
 
-import com.engagetech.expenses.util.CommonUtils;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 
 import javax.ws.rs.core.MediaType;
@@ -13,6 +12,8 @@ import static com.engagetech.expenses.util.CommonUtils.SCALE;
 
 /**
  * Fixer.io client used to retrieve foreign exchange rates and perform conversions
+ *
+ * TODO: Could be a singleton; however, in that case, we would need to use a different testing tool (such as PowerMock) which allows mocking static methods
  *
  * @author N/A
  * @since 2018-02-14

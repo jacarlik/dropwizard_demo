@@ -58,7 +58,7 @@ public class ExpensesApplication extends Application<ExpensesConfiguration>
     @Override
     public void initialize(final Bootstrap<ExpensesConfiguration> bootstrap)
     {
-        // Set up flyway
+        // Set up a flyway bundle
         bootstrap.addBundle(new FlywayBundle<ExpensesConfiguration>() {
             @Override
             public DataSourceFactory getDataSourceFactory(ExpensesConfiguration configuration)
@@ -97,21 +97,40 @@ public class ExpensesApplication extends Application<ExpensesConfiguration>
 
     /**
      * Enable cross-origin resource sharing
+     *
+     * Example pre-flight request:
+     *
+     *      Request Method: OPTIONS
+     *      Request URL: https://localhost:8443/app/expenses?limit=500&offset=0
+     *      Access-Control-Request-Headers: authorization
+     *      Access-Control-Request-Method: GET
+     *      Origin: http://localhost:8080
+     *
+     * Example pre-flight response:
+     *      Access-Control-Allow-Credentials: true
+     *      Access-Control-Allow-Headers: X-Requested-With,Content-Type,Accept,Origin,Authorization
+     *      Access-Control-Allow-Methods: OPTIONS,GET,POST,DELETE
+     *      Access-Control-Allow-Origin: http://localhost:8080
+     *      Access-Control-Max-Age: 1800
      */
     private static void _enableCORS(final Environment environment)
     {
         // Enable CORS headers
         final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
 
-        // Configure CORS parameters
+        // The Access-Control-Allow-Origin response header indicates whether the response can be shared with resources with the given origin
         cors.setInitParameter("allowedOrigins", "*");
+
+        // The Access-Control-Allow-Headers response header is used in response to a pre-flight request to indicate which HTTP headers can be used during the actual request
         cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin,Authorization");
+
+        // The Access-Control-Allow-Methods response header specifies the method or methods allowed when accessing the resource in response to a preflight request
         cors.setInitParameter("allowedMethods", "OPTIONS,GET,POST,DELETE");
 
         // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
 
-        // Do not pass a pre-flight request to down-stream auth filters; unauthenticated preflight requests should be permitted by spec
+        // This will prevent pre-flight requests (that don't have authorization headers on them) from getting filtered by your down-stream authentication / authorization filters which would result in a 401~403 instead of a 200
         cors.setInitParameter(CrossOriginFilter.CHAIN_PREFLIGHT_PARAM, Boolean.FALSE.toString());
     }
 
@@ -121,7 +140,10 @@ public class ExpensesApplication extends Application<ExpensesConfiguration>
     private static void _registerAdditionalModules(final ExpensesConfiguration configuration,
                                                    final Environment environment)
     {
+        // We're using date intentionally, although having datetime would allow us to check whether the expense date is in the future
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(configuration.getDateFormat());
+
+        // Register additional
         environment.getObjectMapper()
             .registerModule(new SimpleModule().addDeserializer(LocalDate.class, new LocalDateDeserializer(dateTimeFormatter)))
             .registerModule(new SimpleModule().addSerializer(LocalDate.class, new LocalDateSerializer(dateTimeFormatter)));
@@ -133,20 +155,29 @@ public class ExpensesApplication extends Application<ExpensesConfiguration>
     private static void _setUpSecurity(final ExpensesConfiguration configuration,
                                        final Environment environment)
     {
+        // The AuthDynamicFeature with the BasicCredentialAuthFilter and RolesAllowedDynamicFeature enables HTTP Basic authentication and authorization; requires an authenticator which takes instances of BasicCredentials
         environment.jersey().register(new AuthDynamicFeature(new BasicCredentialAuthFilter.Builder<User>()
                                                                  .setAuthenticator(new BasicAuthenticator(configuration.getUserName(), configuration.getPassword()))
                                                                  .setAuthorizer(new BasicAuthorizer())
                                                                  .setRealm("BASIC-AUTH-REALM")
                                                                  .buildAuthFilter()));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
+
+        // If we want to use @Auth annotation to inject a custom Principal type into your resource
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
     }
 
     /**
      * Initiate flyway migrations
+     *
+     * This can also be executed from the CLI, for example:
+     * java -jar target/expenses-1.0-SNAPSHOT.jar db migrate src/main/resources/profiles/mainline.yml
+     *
+     * Other available commands: clean, info, validate, init, repair
      */
     private static void _initiateFlywayMigrations(final DataSource dataSource)
     {
+
         Flyway flyway = new Flyway();
         flyway.setDataSource(dataSource);
         flyway.migrate();

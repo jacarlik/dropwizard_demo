@@ -11,7 +11,10 @@ import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
 import java.util.List;
 
 /**
- * Expense service layer acting as a link between resource and DAO layers
+ * Expense service layer (technically, a JDBI SQL object) acting as a link between resource and DAO layers
+ *
+ * This class can use one or more DAOs (by leveraging JDBI CreateSqlObject annotation) in order to build
+ * transactional methods by combining operations from multiple SQL objects.
  *
  * TODO: More granular exception-to-response mapping (potentially by creating custom mappers)
  *

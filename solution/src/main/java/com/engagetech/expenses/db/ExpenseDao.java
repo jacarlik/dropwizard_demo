@@ -18,7 +18,7 @@ import java.util.List;
  * @author N/A
  * @since 2018-02-10
  */
-@RegisterMapper({ExpenseMapper.class, ExpenseRecordTaxMapper.class})
+@RegisterMapper({ ExpenseMapper.class, ExpenseRecordTaxMapper.class })
 public interface ExpenseDao
 {
     @SqlQuery("SELECT id, date, amount, reason FROM t_expense OFFSET :offset LIMIT :limit;")

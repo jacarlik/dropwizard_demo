@@ -12,7 +12,7 @@ import com.engagetech.expenses.core.ExpensesService;
 public class ExpenseResourceHealthCheck extends HealthCheck
 {
     private static final String HEALTHY_MESSAGE = "Expenses service is healthy";
-    private static final String UNHEALTHY_MESSAGE = "Expenses service is not healthy. ";
+    private static final String UNHEALTHY_MESSAGE = "Expenses service is not healthy";
 
     private final ExpensesService m_expensesService;
 

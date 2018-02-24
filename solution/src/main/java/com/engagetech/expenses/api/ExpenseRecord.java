@@ -15,6 +15,8 @@ import java.util.Objects;
 /**
  * A class representing a single expense record
  *
+ * TODO: Builder pattern might be a better alternative compared to having telescopic constructors
+ *
  * @author N/A
  * @since 2018-02-10
  */
@@ -137,6 +139,4 @@ public class ExpenseRecord
     {
         return Objects.hash(m_id, m_date, m_amount, m_currency, m_reason);
     }
-
-
 }

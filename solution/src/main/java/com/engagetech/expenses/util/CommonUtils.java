@@ -60,7 +60,7 @@ public class CommonUtils
             return null;
         }
 
-        // Avoid null characters
+        // Avoid null characters (character with all its bits set to zero)
         value = value.replaceAll("&quot;\0&quot;", "&quot;&quot;");
 
         // Clean out HTML
@@ -74,6 +74,10 @@ public class CommonUtils
 
     /**
      * Extract VAT portion from the original amount
+     *
+     * Example:
+     * Total amount: 10
+     * VAT = 10 - (10 / 1.2) = 1.67
      *
      * @param amount Amount
      * @param vatRate VAT rate
